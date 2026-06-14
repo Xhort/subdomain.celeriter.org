@@ -10,7 +10,7 @@ Price Points:
 * Scrunchies  - $2-5
 * Bandana - $5
 * Bulk/team orders (per shirt): $10–$18
-Why these prices: T-shirts are cheaper to produce, so pricing focuses on design uniqueness and demand. Custom designs can cost more because they take extra time and creativity. Bulk discounts help attract teams, clubs, and events, increasing total sales even if profit per shirt is lower.
+Why these prices:T-shirts are cheaper to produce, so pricing focuses on design uniqueness and demand. Custom designs can cost more because they take extra time and creativity. Bulk discounts help attract teams, clubs, and events, increasing total sales even if profit per shirt is lower.
 
  
 
@@ -37,7 +37,7 @@ Our customers are:
 
 About the Founder
 Contact Us:
-Instagram: @DripDye.co Email: DripDyefsshion.com Phone: 571-455-6572
+Instagram: @DripDye.coEmail: DripDyefsshion.comPhone: 571-455-6572
 
 We built this business because:
 We wanted to turn creativity into a business by designing fun, colorful clothing that allows people to express themselves and stand out.
