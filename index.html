@@ -1,160 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drip Dye</title>
+    <meta name="description" content="Drip Dye is a handmade tie-dye clothing store for bold, creative, one-of-one style.">
+    <title>Drip Dye Website | Handmade Tie-Dye Clothing</title>
+    <script>
+        (() => {
+            const savedTheme = localStorage.getItem("drip-dye-theme");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            document.documentElement.dataset.theme = savedTheme || (prefersDark ? "dark" : "light");
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="promo-bar">
+        <span>Next handmade drop ships in 3-5 days</span>
+        <span>Custom team orders open now</span>
+        <span>Free local pickup</span>
+    </div>
 
-    <header class="hero">
-        <nav>
-            <h1 class="logo">💧 Drip Dye</h1>
-            <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#products">Products</a></li>
-                <li><a href="#goals">Goals</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+    <header class="site-header">
+        <a class="brand" href="#top" aria-label="Drip Dye home">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <span>Drip Dye</span>
+        </a>
+
+        <button class="icon-button menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">
+            <i data-lucide="menu" aria-hidden="true"></i>
+        </button>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+            <a href="#shop">Shop</a>
+            <a href="#custom">Custom</a>
+            <a href="#lookbook">Lookbook</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
         </nav>
 
-        <div class="hero-content">
-            <h2>Fashion Should Be Bold, Creative, and Personal</h2>
-            <p>
-                Handmade tie-dye apparel designed for teens and young adults
-                who want to stand out through color, creativity, and confidence.
-            </p>
-            <a href="#products" class="btn">Explore Products</a>
+        <div class="header-actions">
+            <button class="icon-button search-jump" type="button" aria-label="Search products">
+                <i data-lucide="search" aria-hidden="true"></i>
+            </button>
+            <button class="icon-button theme-toggle" type="button" aria-label="Switch color theme">
+                <i data-lucide="sun-moon" aria-hidden="true"></i>
+            </button>
+            <button class="cart-toggle" type="button" aria-label="Open shopping bag">
+                <i data-lucide="shopping-bag" aria-hidden="true"></i>
+                <span class="cart-count" data-cart-count>0</span>
+            </button>
         </div>
     </header>
 
-    <section id="about">
-        <h2>About Drip Dye</h2>
-        <p>
-            Drip Dye creates handmade, one-of-a-kind tie-dye clothing that helps
-            people express their individuality. Every piece is carefully dyed
-            using vibrant color combinations and artistic patterns.
-        </p>
-
-        <div class="cards">
-            <div class="card">
-                <h3>Our Mission</h3>
-                <p>
-                    Replace boring, mass-produced fashion with creative designs
-                    that help people stand out.
+    <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-content">
+                <p class="eyebrow">Limited handmade drops</p>
+                <h1 id="hero-title">Drip Dye</h1>
+                <p class="hero-copy">
+                    One-of-one tie-dye shirts, accessories, and custom sets made for campus days, team nights, market runs, and every outfit that needs more color.
                 </p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="#shop">
+                        <i data-lucide="sparkles" aria-hidden="true"></i>
+                        Shop the drop
+                    </a>
+                    <a class="button button-secondary" href="#custom">
+                        <i data-lucide="paintbrush" aria-hidden="true"></i>
+                        Start custom order
+                    </a>
+                </div>
+                <dl class="hero-stats" aria-label="Store highlights">
+                    <div>
+                        <dt>1/1</dt>
+                        <dd>hand-dyed pieces</dd>
+                    </div>
+                    <div>
+                        <dt>$2+</dt>
+                        <dd>accessories</dd>
+                    </div>
+                    <div>
+                        <dt>48h</dt>
+                        <dd>custom reply goal</dd>
+                    </div>
+                </dl>
             </div>
 
-            <div class="card">
-                <h3>What Makes Us Special</h3>
-                <p>
-                    Every shirt is unique. No two designs are exactly alike.
-                </p>
+            <div class="hero-rail" aria-label="Featured drops">
+                <article>
+                    <span>Fresh Drop</span>
+                    <strong>After Class Spiral Tee</strong>
+                    <a href="#shop">Shop now</a>
+                </article>
+                <article>
+                    <span>Custom</span>
+                    <strong>Team color bundles</strong>
+                    <a href="#custom">Build yours</a>
+                </article>
+                <article>
+                    <span>Under $5</span>
+                    <strong>Scrunchies + bandanas</strong>
+                    <a href="#shop">Grab extras</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="ticker" aria-label="Brand promises">
+            <span>Handmade</span>
+            <span>No two alike</span>
+            <span>Custom colors</span>
+            <span>Campus-ready</span>
+            <span>Small batch</span>
+        </section>
+
+        <section class="section store-section" id="shop" aria-labelledby="shop-title">
+            <div class="section-heading">
+                <p class="eyebrow">Shop</p>
+                <h2 id="shop-title">The current color drop</h2>
+                <p>Mix bright staples with custom pieces made for school events, sports teams, birthdays, and everyday outfits.</p>
             </div>
 
-            <div class="card">
-                <h3>Who We Serve</h3>
-                <p>
-                    Students, sports teams, school clubs, families, and event
-                    planners looking for custom apparel.
-                </p>
+            <div class="store-toolbar" aria-label="Product controls">
+                <label class="search-field">
+                    <i data-lucide="search" aria-hidden="true"></i>
+                    <span class="sr-only">Search products</span>
+                    <input id="productSearch" type="search" placeholder="Search tees, scrunchies, team orders">
+                </label>
+
+                <div class="filter-group" aria-label="Filter products">
+                    <button class="filter-chip is-active" type="button" data-filter="All">All</button>
+                    <button class="filter-chip" type="button" data-filter="Tees">Tees</button>
+                    <button class="filter-chip" type="button" data-filter="Accessories">Accessories</button>
+                    <button class="filter-chip" type="button" data-filter="Custom">Custom</button>
+                    <button class="filter-chip" type="button" data-filter="Bundles">Bundles</button>
+                </div>
+
+                <label class="sort-field">
+                    <span>Sort</span>
+                    <select id="sortProducts">
+                        <option value="featured">Featured</option>
+                        <option value="low">Price: low to high</option>
+                        <option value="high">Price: high to low</option>
+                        <option value="name">Name</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="product-grid" id="productGrid" aria-live="polite"></div>
+            <p class="empty-state" id="emptyState" hidden>No pieces match that search yet.</p>
+        </section>
+
+        <section class="section collections" aria-labelledby="collections-title">
+            <div class="section-heading align-left">
+                <p class="eyebrow">Drops</p>
+                <h2 id="collections-title">Shop by mood</h2>
+            </div>
+            <div class="collection-grid">
+                <a class="collection-tile color-loud" href="#shop" data-collection-filter="Tees">
+                    <span>School day loud</span>
+                    <strong>Bright tees for daily rotation</strong>
+                </a>
+                <a class="collection-tile color-team" href="#custom" data-collection-filter="Custom">
+                    <span>Team order ready</span>
+                    <strong>Matching colors for clubs and squads</strong>
+                </a>
+                <a class="collection-tile color-soft" href="#shop" data-collection-filter="Accessories">
+                    <span>Easy add-ons</span>
+                    <strong>Scrunchies, bandanas, and gifts</strong>
+                </a>
+            </div>
+        </section>
+
+        <section class="section custom-section" id="custom" aria-labelledby="custom-title">
+            <div class="section-heading">
+                <p class="eyebrow">Custom studio</p>
+                <h2 id="custom-title">Build a colorway nobody else has</h2>
+                <p>Choose the piece, send your palette, and Drip Dye will reply with pricing, timing, and a mockup direction.</p>
+            </div>
+
+            <div class="custom-layout">
+                <form class="custom-form" id="customForm">
+                    <label>
+                        Name
+                        <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
+                    </label>
+                    <label>
+                        Email or Instagram
+                        <input type="text" name="contact" autocomplete="email" placeholder="@handle or email" required>
+                    </label>
+                    <label>
+                        What are we making?
+                        <select name="item" required>
+                            <option value="">Pick one</option>
+                            <option>T-shirt</option>
+                            <option>Scrunchies</option>
+                            <option>Bandanas</option>
+                            <option>Team or club order</option>
+                            <option>Gift bundle</option>
+                        </select>
+                    </label>
+                    <label>
+                        Color vibe
+                        <input type="text" name="palette" placeholder="Neon sunset, school colors, pastel swirl">
+                    </label>
+                    <label>
+                        Details
+                        <textarea name="details" rows="4" placeholder="Sizes, quantity, event date, and any design ideas"></textarea>
+                    </label>
+                    <button class="button button-primary" type="submit">
+                        <i data-lucide="send" aria-hidden="true"></i>
+                        Request custom quote
+                    </button>
+                </form>
+
+                <div class="pricing-board" aria-label="Pricing guide">
+                    <article>
+                        <span>Basic tees</span>
+                        <strong>$10-$13</strong>
+                        <p>Simple spiral, crumple, or split-dye designs.</p>
+                    </article>
+                    <article>
+                        <span>Accessories</span>
+                        <strong>$2-$5</strong>
+                        <p>Scrunchies and bandanas to match the fit.</p>
+                    </article>
+                    <article>
+                        <span>Bulk orders</span>
+                        <strong>$10-$18</strong>
+                        <p>Per-shirt pricing for clubs, teams, and events.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section lookbook" id="lookbook" aria-labelledby="lookbook-title">
+            <div class="section-heading align-left">
+                <p class="eyebrow">Lookbook</p>
+                <h2 id="lookbook-title">Color in the wild</h2>
+            </div>
+            <div class="lookbook-grid">
+                <figure class="lookbook-large">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80" alt="Streetwear outfit with bright layered clothing" loading="lazy">
+                    <figcaption>Market day layers</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80" alt="Young adult fashion portrait with expressive styling" loading="lazy">
+                    <figcaption>Bold campus fit</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=80" alt="Colorful clothing rack in a boutique" loading="lazy">
+                    <figcaption>Drop rack energy</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section proof-section" id="reviews" aria-labelledby="reviews-title">
+            <div class="section-heading">
+                <p class="eyebrow">Proof</p>
+                <h2 id="reviews-title">Made to stand out</h2>
+            </div>
+            <div class="proof-grid">
+                <article class="review-card">
+                    <div class="rating" aria-label="5 out of 5 stars">★★★★★</div>
+                    <p>“My club wanted matching shirts that still felt personal. The colors came out way better than the inspo pics.”</p>
+                    <span>Maya, school club order</span>
+                </article>
+                <article class="review-card">
+                    <div class="rating" aria-label="5 out of 5 stars">★★★★★</div>
+                    <p>“The tee feels handmade in the best way. Nobody else has the exact same pattern.”</p>
+                    <span>Jules, repeat customer</span>
+                </article>
+                <article class="review-card">
+                    <div class="rating" aria-label="5 out of 5 stars">★★★★★</div>
+                    <p>“I got a scrunchie and bandana with my shirt. Easy gift, cute packaging, good price.”</p>
+                    <span>Ari, market shopper</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="section care-section" aria-labelledby="care-title">
+            <div class="section-heading align-left">
+                <p class="eyebrow">Details</p>
+                <h2 id="care-title">Store essentials</h2>
+            </div>
+            <div class="care-grid">
+                <article>
+                    <i data-lucide="truck" aria-hidden="true"></i>
+                    <h3>Pickup + shipping</h3>
+                    <p>Local pickup is available. Shipped orders are packed within 3-5 business days after dye curing.</p>
+                </article>
+                <article>
+                    <i data-lucide="refresh-cw" aria-hidden="true"></i>
+                    <h3>Returns</h3>
+                    <p>Ready-made items can be exchanged within 7 days. Custom pieces are final sale once approved.</p>
+                </article>
+                <article>
+                    <i data-lucide="shirt" aria-hidden="true"></i>
+                    <h3>Care</h3>
+                    <p>Wash cold, inside out, with similar colors. Tumble low or air dry to keep the dye crisp.</p>
+                </article>
+                <article>
+                    <i data-lucide="badge-percent" aria-hidden="true"></i>
+                    <h3>Bulk perks</h3>
+                    <p>Team and event orders can include custom colors, bundled accessories, and group pricing.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section faq-section" aria-labelledby="faq-title">
+            <div class="section-heading">
+                <p class="eyebrow">FAQ</p>
+                <h2 id="faq-title">Before you check out</h2>
+            </div>
+            <div class="faq-list">
+                <article class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        Are all pieces really one-of-one?
+                        <i data-lucide="chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. Patterns are hand-dyed, so colors can be repeated but the exact swirls, splashes, and blends will vary.</p>
+                    </div>
+                </article>
+                <article class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        Can I order school or team colors?
+                        <i data-lucide="chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. Custom orders can match school colors, event themes, birthday palettes, or club branding.</p>
+                    </div>
+                </article>
+                <article class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        How should I choose a size?
+                        <i data-lucide="chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Most tees fit true to size. Size up for an oversized streetwear fit or include sizing notes in a custom request.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section contact-section" id="contact" aria-labelledby="contact-title">
+            <div class="contact-copy">
+                <p class="eyebrow">Stay tapped in</p>
+                <h2 id="contact-title">Drop alerts, custom slots, market dates</h2>
+                <p>Follow the color trail for limited drops, new samples, and behind-the-scenes dye days.</p>
+                <div class="contact-links">
+                    <a href="https://www.instagram.com/DripDye.co" target="_blank" rel="noreferrer">Instagram: @DripDye.co</a>
+                    <a href="mailto:DripDyefashion@gmail.com">DripDyefashion@gmail.com</a>
+                    <a href="tel:+15714556572">571-455-6572</a>
+                </div>
+            </div>
+
+            <form class="newsletter-form" id="newsletterForm">
+                <label>
+                    Email
+                    <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+                </label>
+                <label>
+                    What do you want first?
+                    <select name="interest">
+                        <option>New drops</option>
+                        <option>Custom order slots</option>
+                        <option>Market dates</option>
+                        <option>Team order deals</option>
+                    </select>
+                </label>
+                <button class="button button-secondary" type="submit">
+                    <i data-lucide="mail-plus" aria-hidden="true"></i>
+                    Join drop list
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true" aria-label="Shopping bag">
+        <div class="cart-panel">
+            <div class="cart-header">
+                <div>
+                    <span class="eyebrow">Checkout</span>
+                    <h2>Your bag</h2>
+                </div>
+                <button class="icon-button close-cart" type="button" aria-label="Close shopping bag">
+                    <i data-lucide="x" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer">
+                <div class="subtotal-row">
+                    <span>Subtotal</span>
+                    <strong id="cartSubtotal">$0</strong>
+                </div>
+                <p>Taxes, delivery, and custom quote adjustments are calculated after order confirmation.</p>
+                <button class="button button-primary checkout-button" type="button">
+                    <i data-lucide="credit-card" aria-hidden="true"></i>
+                    Checkout mockup
+                </button>
             </div>
         </div>
-    </section>
+    </aside>
 
-    <section id="products">
-        <h2>Products & Pricing</h2>
-
-        <div class="product-grid">
-
-            <div class="product-card">
-                <h3>Tie-Dye T-Shirts</h3>
-                <p>Custom handmade designs</p>
-                <span>$10 - $13</span>
-            </div>
-
-            <div class="product-card">
-                <h3>Scrunchies</h3>
-                <p>Colorful matching accessories</p>
-                <span>$2 - $5</span>
-            </div>
-
-            <div class="product-card">
-                <h3>Bandanas</h3>
-                <p>Fun tie-dye patterns</p>
-                <span>$5</span>
-            </div>
-
-            <div class="product-card">
-                <h3>Bulk Team Orders</h3>
-                <p>Sports teams & clubs</p>
-                <span>$10 - $18</span>
-            </div>
-
+    <div class="quick-view" id="quickView" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="quickViewTitle">
+        <div class="quick-view-panel">
+            <button class="icon-button quick-close" type="button" aria-label="Close product preview">
+                <i data-lucide="x" aria-hidden="true"></i>
+            </button>
+            <div id="quickViewContent"></div>
         </div>
-    </section>
+    </div>
 
-    <section id="goals">
-        <h2>30 • 60 • 90 Day Goals</h2>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-        <div class="timeline">
-            <div class="goal">
-                <h3>30 Days</h3>
-                <ul>
-                    <li>Create sample designs</li>
-                    <li>Build inventory</li>
-                    <li>Launch social media</li>
-                    <li>Sell first shirts</li>
-                </ul>
-            </div>
-
-            <div class="goal">
-                <h3>60 Days</h3>
-                <ul>
-                    <li>Take custom orders</li>
-                    <li>Expand designs</li>
-                    <li>Build customer base</li>
-                </ul>
-            </div>
-
-            <div class="goal">
-                <h3>90 Days</h3>
-                <ul>
-                    <li>Sell at JMU market</li>
-                    <li>Increase profits</li>
-                    <li>Launch packaging</li>
-                    <li>Build brand recognition</li>
-                </ul>
-            </div>
+    <footer class="site-footer">
+        <div>
+            <a class="brand" href="#top" aria-label="Drip Dye home">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span>Drip Dye</span>
+            </a>
+            <p>Handmade. Colorful. Unique.</p>
         </div>
-    </section>
-
-    <section id="founder">
-        <h2>About the Founder</h2>
-
-        <p>
-            Hi, my name is Libby Drake, and I started Drip Dye because I wanted
-            to turn creativity into a business. Our goal is to create colorful,
-            unique clothing that helps people express themselves and stand out.
-        </p>
-    </section>
-
-    <section id="contact">
-        <h2>Contact Us</h2>
-
-        <div class="contact-box">
-            <p><strong>Instagram:</strong> @DripDye.co</p>
-            <p><strong>Email:</strong> DripDyefashion@gmail.com</p>
-            <p><strong>Phone:</strong> 571-455-6572</p>
+        <div class="footer-links">
+            <a href="#shop">Shop</a>
+            <a href="#custom">Custom Orders</a>
+            <a href="#contact">Contact</a>
         </div>
-    </section>
-
-    <footer>
-        <p>© 2026 Drip Dye. Handmade. Colorful. Unique.</p>
+        <p class="copyright">© 2026 Drip Dye. Built for bold closets.</p>
     </footer>
 
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <script src="script.js"></script>
-
 </body>
 </html>
