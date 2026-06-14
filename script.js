@@ -6,7 +6,7 @@ const products = [
         price: 13,
         badge: "Best seller",
         image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80",
-        alt: "Young adult wearing a bright casual fashion outfit",
+        alt: "Young adult wearing bright casual fashion outfit",
         description: "Classic spiral tee with high-energy color blends for everyday outfits.",
         colors: [
             { name: "Sunset Pop", value: "#ff3f9f" },
