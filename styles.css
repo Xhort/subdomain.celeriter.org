@@ -464,7 +464,8 @@ button {
 .search-field,
 .sort-field,
 .custom-form label,
-.newsletter-form label {
+.newsletter-form label,
+.checkout-form label {
     display: grid;
     gap: 8px;
     color: var(--muted);
@@ -490,7 +491,9 @@ button {
 .custom-form select,
 .custom-form textarea,
 .newsletter-form input,
-.newsletter-form select {
+.newsletter-form select,
+.checkout-form input,
+.checkout-form textarea {
     width: 100%;
     min-height: 46px;
     border: 1px solid var(--line);
@@ -510,7 +513,9 @@ button {
 .custom-form select:focus,
 .custom-form textarea:focus,
 .newsletter-form input:focus,
-.newsletter-form select:focus {
+.newsletter-form select:focus,
+.checkout-form input:focus,
+.checkout-form textarea:focus {
     border-color: var(--accent-blue);
     outline: 3px solid color-mix(in srgb, var(--accent-blue) 18%, transparent);
 }
@@ -1134,6 +1139,21 @@ button {
 .cart-footer p {
     color: var(--muted);
     font-size: 0.82rem;
+}
+
+.checkout-form {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.checkout-form textarea {
+    min-height: 84px;
+    resize: vertical;
+}
+
+.checkout-form p {
+    margin: 0;
 }
 
 .checkout-button {

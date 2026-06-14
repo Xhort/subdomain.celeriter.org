@@ -399,11 +399,25 @@
                     <span>Subtotal</span>
                     <strong id="cartSubtotal">$0</strong>
                 </div>
-                <p>Taxes, delivery, and custom quote adjustments are calculated after order confirmation.</p>
-                <button class="button button-primary checkout-button" type="button">
-                    <i data-lucide="credit-card" aria-hidden="true"></i>
-                    Checkout mockup
-                </button>
+                <form class="checkout-form" id="checkoutForm">
+                    <label>
+                        Name
+                        <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
+                    </label>
+                    <label>
+                        Email or Instagram
+                        <input type="text" name="contact" autocomplete="email" placeholder="@handle or email" required>
+                    </label>
+                    <label>
+                        Notes
+                        <textarea name="notes" rows="3" placeholder="Pickup, delivery, event date, or custom details"></textarea>
+                    </label>
+                    <p>Taxes, delivery, and custom quote adjustments are calculated after order confirmation.</p>
+                    <button class="button button-primary checkout-button" type="submit">
+                        <i data-lucide="credit-card" aria-hidden="true"></i>
+                        Place order request
+                    </button>
+                </form>
             </div>
         </div>
     </aside>

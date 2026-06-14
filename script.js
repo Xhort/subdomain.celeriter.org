@@ -104,6 +104,7 @@ const sortProducts = document.querySelector("#sortProducts");
 const cartDrawer = document.querySelector("#cartDrawer");
 const cartItems = document.querySelector("#cartItems");
 const cartSubtotal = document.querySelector("#cartSubtotal");
+const checkoutForm = document.querySelector("#checkoutForm");
 const toast = document.querySelector("#toast");
 const quickView = document.querySelector("#quickView");
 const quickViewContent = document.querySelector("#quickViewContent");
@@ -333,6 +334,63 @@ function showToast(message) {
     }, 2600);
 }
 
+function buildOrderPayload(form) {
+    const formData = new FormData(form);
+    return {
+        customer: {
+            name: formData.get("name"),
+            contact: formData.get("contact"),
+            notes: formData.get("notes")
+        },
+        items: cart.map((item) => ({
+            productId: item.productId,
+            size: item.size,
+            color: item.color,
+            quantity: item.quantity
+        }))
+    };
+}
+
+async function submitOrder(event) {
+    event.preventDefault();
+
+    if (cart.length === 0) {
+        showToast("Add at least one item before placing an order.");
+        return;
+    }
+
+    const button = checkoutForm.querySelector(".checkout-button");
+    button.disabled = true;
+    button.textContent = "Saving order...";
+
+    try {
+        const response = await fetch("/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(buildOrderPayload(checkoutForm))
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            throw new Error(data.error || "The order could not be saved.");
+        }
+
+        cart = [];
+        saveState();
+        renderCart();
+        checkoutForm.reset();
+        showToast(`Order #${data.order.id} saved. Drip Dye will follow up soon.`);
+    } catch (error) {
+        showToast(error.message);
+    } finally {
+        button.disabled = false;
+        button.innerHTML = `<i data-lucide="credit-card" aria-hidden="true"></i>Place order request`;
+        refreshIcons();
+    }
+}
+
 document.querySelector(".theme-toggle").addEventListener("click", () => {
     const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = nextTheme;
@@ -427,9 +485,7 @@ cartItems.addEventListener("click", (event) => {
     }
 });
 
-document.querySelector(".checkout-button").addEventListener("click", () => {
-    showToast("Checkout is staged as a storefront mockup. Connect payments when you are ready.");
-});
+checkoutForm.addEventListener("submit", submitOrder);
 
 document.querySelector(".quick-close").addEventListener("click", closeQuickView);
 quickView.addEventListener("click", (event) => {
