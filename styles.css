@@ -133,17 +133,14 @@ button {
     font-weight: 800;
 }
 
-.brand-mark {
-    width: 34px;
-    height: 34px;
-    display: inline-block;
-    border: 2px solid color-mix(in srgb, var(--ink) 18%, transparent);
-    border-radius: 72% 58% 72% 44%;
-    background:
-        radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.82), transparent 0 15%, transparent 16%),
-        conic-gradient(from 30deg, var(--accent-yellow), var(--accent-pink), var(--accent-purple), var(--accent-blue), var(--accent-green), var(--accent-yellow));
-    transform: rotate(45deg);
-    box-shadow: 0 10px 24px rgba(255, 63, 159, 0.28);
+.brand-logo {
+    width: 42px;
+    height: 48px;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(255, 63, 159, 0.22);
 }
 
 .site-nav {
@@ -241,9 +238,17 @@ button {
     overflow: hidden;
     padding: 90px clamp(18px, 5%, 64px) 28px;
     color: #fff;
-    background:
-        linear-gradient(90deg, rgba(10, 10, 15, 0.9) 0%, rgba(10, 10, 15, 0.66) 46%, rgba(10, 10, 15, 0.2) 100%),
-        url("https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1800&q=82") center 30% / cover;
+    background-color: #020204;
+    background-image:
+        linear-gradient(90deg, rgba(10, 10, 15, 0.94) 0%, rgba(10, 10, 15, 0.78) 46%, rgba(10, 10, 15, 0.18) 100%),
+        url("./assets/drip-dye-logo.jpeg");
+    background-position:
+        center,
+        right clamp(18px, 7vw, 96px) center;
+    background-size:
+        auto,
+        min(48vw, 520px) auto;
+    background-repeat: no-repeat;
 }
 
 .hero::after {
@@ -1355,7 +1360,12 @@ button {
 
     .hero {
         min-height: 700px;
-        background-position: 58% 50%;
+        background-position:
+            center,
+            center 42%;
+        background-size:
+            auto,
+            min(72vw, 480px) auto;
     }
 
     .hero h1 {
@@ -1411,6 +1421,12 @@ button {
     .hero {
         min-height: 720px;
         padding-inline: 16px;
+        background-position:
+            center,
+            center 120px;
+        background-size:
+            auto,
+            min(86vw, 390px) auto;
     }
 
     .hero h1 {

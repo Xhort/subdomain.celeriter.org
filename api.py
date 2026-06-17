@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from chatbot import get_bot_response
-
 
 app = FastAPI()
 
@@ -18,17 +16,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class ChatRequest(BaseModel):
-    message: str
-
 @app.get("/")
 def home():
     return {"message": "FastAPI chatbot server is running"}
-
-@app.post("/chat")
-def chat(request: ChatRequest):
-    reply = get_bot_response(request.message)
-    return {"reply": reply}
 
 
 # uvicorn api:app --reload
