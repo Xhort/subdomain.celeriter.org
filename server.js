@@ -3,13 +3,61 @@ require("dotenv").config();
 const path = require("path");
 const cors = require("cors");
 const express = require("express");
-const { initDatabase, listProducts, createOrder, getOrder, listOrders } = require("./backend/database");
+const {
+    initDatabase,
+    listProducts,
+    createOrder,
+    attachStripeSession,
+    markOrderPaidBySession,
+    getOrder,
+    listOrders
+} = require("./backend/database");
+const { primaryColors, products } = require("./backend/catalog");
 
 const app = express();
 const port = process.env.PORT || 3000;
+const productById = new Map(products.map((product) => [product.id, product]));
 
 app.use(cors());
+
+function getStripe() {
+    if (!process.env.STRIPE_SECRET_KEY) {
+        const error = new Error("STRIPE_SECRET_KEY is not configured.");
+        error.statusCode = 503;
+        throw error;
+    }
+
+    const stripe = require("stripe");
+    return stripe(process.env.STRIPE_SECRET_KEY);
+}
+
+app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async (req, res, next) => {
+    try {
+        if (!process.env.STRIPE_WEBHOOK_SECRET) {
+            const error = new Error("STRIPE_WEBHOOK_SECRET is not configured.");
+            error.statusCode = 503;
+            throw error;
+        }
+
+        const event = getStripe().webhooks.constructEvent(
+            req.body,
+            req.get("stripe-signature"),
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+
+        if (event.type === "checkout.session.completed") {
+            const session = event.data.object;
+            await markOrderPaidBySession(session.id, session.payment_intent);
+        }
+
+        res.json({ received: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
 app.use(express.json({ limit: "200kb" }));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 const publicFiles = new Map([
     ["/", "index.html"],
@@ -29,12 +77,12 @@ function cleanText(value, maxLength) {
 function validateOrder(body) {
     const customer = {
         name: cleanText(body?.customer?.name, 120),
-        contact: cleanText(body?.customer?.contact, 180),
+        contact: cleanText(body?.customer?.email || body?.customer?.contact, 180),
         notes: cleanText(body?.customer?.notes, 500)
     };
 
     if (!customer.name || !customer.contact) {
-        const error = new Error("Name and contact are required.");
+        const error = new Error("Name and email are required.");
         error.statusCode = 400;
         throw error;
     }
@@ -56,8 +104,22 @@ function validateOrder(body) {
         const productId = cleanText(item.productId, 80);
         const size = cleanText(item.size, 80);
         const color = cleanText(item.color, 120);
-        if (!productId || !size || !color) {
-            const error = new Error("Each item needs a product, size, and color.");
+        const product = productById.get(productId);
+
+        if (!product) {
+            const error = new Error(`Unknown product: ${productId}`);
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (!product.sizes.includes(size)) {
+            const error = new Error(`${product.name} is not available in size ${size}.`);
+            error.statusCode = 400;
+            throw error;
+        }
+
+        if (!primaryColors.includes(color)) {
+            const error = new Error(`${color} is not an available color.`);
             error.statusCode = 400;
             throw error;
         }
@@ -66,6 +128,10 @@ function validateOrder(body) {
     });
 
     return { customer, items };
+}
+
+function getPublicUrl(req) {
+    return process.env.PUBLIC_URL || `${req.protocol}://${req.get("host")}`;
 }
 
 function requireAdmin(req, res, next) {
@@ -82,13 +148,17 @@ function requireAdmin(req, res, next) {
 app.get("/api/health", (req, res) => {
     res.json({
         ok: true,
-        database: Boolean(process.env.DATABASE_URL)
+        database: Boolean(process.env.DATABASE_URL),
+        stripe: Boolean(process.env.STRIPE_SECRET_KEY)
     });
 });
 
 app.get("/api/products", async (req, res, next) => {
     try {
-        res.json({ products: await listProducts() });
+        res.json({
+            colors: primaryColors,
+            products: await listProducts()
+        });
     } catch (error) {
         next(error);
     }
@@ -99,6 +169,45 @@ app.post("/api/orders", async (req, res, next) => {
         const payload = validateOrder(req.body);
         const order = await createOrder(payload);
         res.status(201).json({ order });
+    } catch (error) {
+        next(error);
+    }
+});
+
+app.post("/api/checkout", async (req, res, next) => {
+    try {
+        const payload = validateOrder(req.body);
+        const order = await createOrder(payload);
+        const publicUrl = getPublicUrl(req);
+
+        const session = await getStripe().checkout.sessions.create({
+            mode: "payment",
+            customer_email: payload.customer.contact,
+            line_items: order.items.map((item) => ({
+                quantity: item.quantity,
+                price_data: {
+                    currency: "usd",
+                    unit_amount: item.unitPriceCents,
+                    product_data: {
+                        name: item.productName,
+                        description: `${item.color} primary color, ${item.size}. Handmade pattern will vary.`
+                    }
+                }
+            })),
+            metadata: {
+                orderId: String(order.id)
+            },
+            payment_intent_data: {
+                metadata: {
+                    orderId: String(order.id)
+                }
+            },
+            success_url: `${publicUrl}/?checkout=success&order=${order.id}`,
+            cancel_url: `${publicUrl}/?checkout=canceled&order=${order.id}`
+        });
+
+        await attachStripeSession(order.id, session.id);
+        res.status(201).json({ orderId: order.id, url: session.url });
     } catch (error) {
         next(error);
     }
@@ -133,7 +242,7 @@ app.get("*", (req, res) => {
 app.use((error, req, res, next) => {
     const statusCode = error.statusCode || 500;
     res.status(statusCode).json({
-        error: statusCode === 500 ? "Something went wrong saving that order." : error.message
+        error: statusCode === 500 ? "Something went wrong. Please try again." : error.message
     });
 });
 

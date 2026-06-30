@@ -1,40 +1,27 @@
+const primaryColors = ["Red", "Blue", "Green", "Orange", "Yellow"];
+
 const products = [
     {
-        id: "after-class-spiral",
-        name: "After Class Spiral Tee",
-        category: "Tees",
-        priceCents: 1300
+        id: "tie-dye-tshirt",
+        name: "Tie Dye T-shirt",
+        category: "Shirt",
+        priceCents: 2000,
+        sizes: ["S", "M", "L", "XL"]
     },
     {
-        id: "market-run-tee",
-        name: "Market Run Cloud Tee",
-        category: "Tees",
-        priceCents: 1200
+        id: "tie-dye-tote-bag",
+        name: "Tie Dye Tote Bag",
+        category: "Bag",
+        priceCents: 1600,
+        sizes: ["One size"]
     },
     {
-        id: "game-day-bundle",
-        name: "Game Day Team Bundle",
-        category: "Bundles",
-        priceCents: 1800
-    },
-    {
-        id: "mini-drip-scrunchie",
-        name: "Mini Drip Scrunchie",
-        category: "Accessories",
-        priceCents: 300
-    },
-    {
-        id: "splash-bandana",
-        name: "Splash Bandana",
-        category: "Accessories",
-        priceCents: 500
-    },
-    {
-        id: "custom-color-slot",
-        name: "Custom Color Slot",
-        category: "Custom",
-        priceCents: 1000
+        id: "tie-dye-drawstring-bag",
+        name: "Tie Dye Drawstring Bag",
+        category: "Bag",
+        priceCents: 1400,
+        sizes: ["One size"]
     }
 ];
 
-module.exports = { products };
+module.exports = { primaryColors, products };

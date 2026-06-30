@@ -1,7 +1,11 @@
+const fs = require("fs/promises");
+const path = require("path");
 const { Pool } = require("pg");
 const { products } = require("./catalog");
 
 const connectionString = process.env.DATABASE_URL;
+const dataDirectory = process.env.DATA_DIR || path.join(__dirname, "..", ".data");
+const fileStorePath = path.join(dataDirectory, "orders.json");
 
 const pool = connectionString
     ? new Pool({
@@ -17,6 +21,85 @@ function requireDatabase() {
         throw error;
     }
     return pool;
+}
+
+function defaultStore() {
+    return { nextOrderId: 1, orders: [] };
+}
+
+async function readFileStore() {
+    try {
+        const contents = await fs.readFile(fileStorePath, "utf8");
+        const store = JSON.parse(contents);
+        if (!Array.isArray(store.orders)) return defaultStore();
+        return {
+            nextOrderId: Number(store.nextOrderId) || 1,
+            orders: store.orders
+        };
+    } catch (error) {
+        if (error.code === "ENOENT") return defaultStore();
+        throw error;
+    }
+}
+
+async function writeFileStore(store) {
+    await fs.mkdir(dataDirectory, { recursive: true });
+    await fs.writeFile(fileStorePath, `${JSON.stringify(store, null, 2)}\n`);
+}
+
+function buildOrderItems(payload) {
+    const productById = new Map(products.map((product) => [product.id, product]));
+
+    return payload.items.map((item) => {
+        const product = productById.get(item.productId);
+        if (!product) {
+            const error = new Error(`Unknown product: ${item.productId}`);
+            error.statusCode = 400;
+            throw error;
+        }
+
+        const quantity = Number(item.quantity);
+        const lineTotalCents = product.priceCents * quantity;
+        return {
+            productId: product.id,
+            productName: product.name,
+            size: item.size,
+            color: item.color,
+            quantity,
+            unitPriceCents: product.priceCents,
+            lineTotalCents
+        };
+    });
+}
+
+async function createFileOrder(payload) {
+    const orderItems = buildOrderItems(payload);
+    const subtotalCents = orderItems.reduce((sum, item) => sum + item.lineTotalCents, 0);
+    const store = await readFileStore();
+    const order = {
+        id: store.nextOrderId,
+        customerName: payload.customer.name,
+        customerContact: payload.customer.contact,
+        customerNotes: payload.customer.notes || null,
+        subtotalCents,
+        status: "checkout_pending",
+        stripeCheckoutSessionId: null,
+        stripePaymentIntentId: null,
+        createdAt: new Date().toISOString(),
+        items: orderItems
+    };
+
+    store.nextOrderId = order.id + 1;
+    store.orders.push(order);
+    await writeFileStore(store);
+
+    return {
+        id: order.id,
+        subtotalCents: order.subtotalCents,
+        status: order.status,
+        createdAt: order.createdAt,
+        items: order.items
+    };
 }
 
 async function initDatabase() {
@@ -38,7 +121,9 @@ async function initDatabase() {
             customer_contact TEXT NOT NULL,
             customer_notes TEXT,
             subtotal_cents INTEGER NOT NULL CHECK (subtotal_cents >= 0),
-            status TEXT NOT NULL DEFAULT 'pending',
+            status TEXT NOT NULL DEFAULT 'checkout_pending',
+            stripe_checkout_session_id TEXT,
+            stripe_payment_intent_id TEXT,
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         );
 
@@ -53,6 +138,17 @@ async function initDatabase() {
             unit_price_cents INTEGER NOT NULL CHECK (unit_price_cents >= 0),
             line_total_cents INTEGER NOT NULL CHECK (line_total_cents >= 0)
         );
+    `);
+
+    await pool.query(`
+        ALTER TABLE orders
+        ADD COLUMN IF NOT EXISTS stripe_checkout_session_id TEXT;
+
+        ALTER TABLE orders
+        ADD COLUMN IF NOT EXISTS stripe_payment_intent_id TEXT;
+
+        ALTER TABLE orders
+        ALTER COLUMN status SET DEFAULT 'checkout_pending';
     `);
 
     for (const product of products) {
@@ -70,9 +166,28 @@ async function initDatabase() {
             [product.id, product.name, product.category, product.priceCents]
         );
     }
+
+    await pool.query(
+        `
+            UPDATE products
+            SET active = FALSE,
+                updated_at = NOW()
+            WHERE NOT (id = ANY($1))
+        `,
+        [products.map((product) => product.id)]
+    );
 }
 
 async function listProducts() {
+    if (!pool) {
+        return products.map((product) => ({
+            id: product.id,
+            name: product.name,
+            category: product.category,
+            priceCents: product.priceCents
+        }));
+    }
+
     const db = requireDatabase();
     const result = await db.query(`
         SELECT id, name, category, price_cents AS "priceCents"
@@ -84,6 +199,8 @@ async function listProducts() {
 }
 
 async function createOrder(payload) {
+    if (!pool) return createFileOrder(payload);
+
     const db = requireDatabase();
     const client = await db.connect();
 
@@ -168,7 +285,89 @@ async function createOrder(payload) {
     }
 }
 
+async function attachStripeSession(orderId, sessionId) {
+    if (!pool) {
+        const store = await readFileStore();
+        const order = store.orders.find((entry) => String(entry.id) === String(orderId));
+        if (!order) return null;
+
+        order.stripeCheckoutSessionId = sessionId;
+        order.status = "checkout_started";
+        await writeFileStore(store);
+
+        return {
+            id: order.id,
+            subtotalCents: order.subtotalCents,
+            status: order.status,
+            stripeCheckoutSessionId: order.stripeCheckoutSessionId
+        };
+    }
+
+    const db = requireDatabase();
+    const result = await db.query(
+        `
+            UPDATE orders
+            SET stripe_checkout_session_id = $2,
+                status = 'checkout_started'
+            WHERE id = $1
+            RETURNING id, subtotal_cents AS "subtotalCents", status, stripe_checkout_session_id AS "stripeCheckoutSessionId"
+        `,
+        [orderId, sessionId]
+    );
+
+    return result.rows[0] || null;
+}
+
+async function markOrderPaidBySession(sessionId, paymentIntentId) {
+    if (!pool) {
+        const store = await readFileStore();
+        const order = store.orders.find((entry) => entry.stripeCheckoutSessionId === sessionId);
+        if (!order) return null;
+
+        order.status = "paid";
+        order.stripePaymentIntentId = paymentIntentId || null;
+        await writeFileStore(store);
+
+        return {
+            id: order.id,
+            subtotalCents: order.subtotalCents,
+            status: order.status
+        };
+    }
+
+    const db = requireDatabase();
+    const result = await db.query(
+        `
+            UPDATE orders
+            SET status = 'paid',
+                stripe_payment_intent_id = $2
+            WHERE stripe_checkout_session_id = $1
+            RETURNING id, subtotal_cents AS "subtotalCents", status
+        `,
+        [sessionId, paymentIntentId || null]
+    );
+
+    return result.rows[0] || null;
+}
+
 async function getOrder(id) {
+    if (!pool) {
+        const store = await readFileStore();
+        const order = store.orders.find((entry) => String(entry.id) === String(id));
+        if (!order) return null;
+
+        return {
+            id: order.id,
+            customerName: order.customerName,
+            customerContact: order.customerContact,
+            customerNotes: order.customerNotes,
+            subtotalCents: order.subtotalCents,
+            status: order.status,
+            createdAt: order.createdAt,
+            items: order.items
+        };
+    }
+
     const db = requireDatabase();
     const orderResult = await db.query(
         `
@@ -209,6 +408,22 @@ async function getOrder(id) {
 }
 
 async function listOrders(limit = 50) {
+    if (!pool) {
+        const store = await readFileStore();
+        return store.orders
+            .slice()
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, limit)
+            .map((order) => ({
+                id: order.id,
+                customerName: order.customerName,
+                customerContact: order.customerContact,
+                subtotalCents: order.subtotalCents,
+                status: order.status,
+                createdAt: order.createdAt
+            }));
+    }
+
     const db = requireDatabase();
     const result = await db.query(
         `
@@ -232,6 +447,8 @@ module.exports = {
     initDatabase,
     listProducts,
     createOrder,
+    attachStripeSession,
+    markOrderPaidBySession,
     getOrder,
     listOrders
 };
