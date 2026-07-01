@@ -1,16 +1,19 @@
 :root {
     /* Central design tokens make colors, spacing, and shapes easy to change. */
-    --bg: #fbfbff;
-    --surface: #ffffff;
-    --ink: #15151b;
-    --muted: #666674;
-    --line: rgba(21, 21, 27, 0.12);
-    --pink: #ff3f9f;
+    --bg: #08080d;
+    --surface: #131320;
+    --surface-2: #1b1b2b;
+    --ink: #f5f5fb;
+    --muted: #9d9db4;
+    --line: rgba(245, 245, 251, 0.13);
+    --cyan: #00f0ff;
+    --pink: #ff2f9e;
     --blue: #0aa6ff;
     --yellow: #ffd84d;
     --green: #30d876;
     --orange: #ff7a1a;
-    --shadow: 0 20px 54px rgba(20, 20, 28, 0.12);
+    --shadow: 0 20px 54px rgba(0, 0, 0, 0.5);
+    --glow: 0 0 0 1px rgba(0, 240, 255, 0.18), 0 0 44px rgba(255, 47, 158, 0.16);
     --radius: 8px;
 }
 
@@ -20,6 +23,7 @@
 
 html {
     scroll-behavior: smooth;
+    color-scheme: dark;
 }
 
 body {
@@ -69,7 +73,7 @@ button:disabled {
 
 /* A consistent, high-contrast focus ring makes keyboard navigation visible. */
 :where(a, button, input, select, textarea):focus-visible {
-    outline: 3px solid var(--blue);
+    outline: 3px solid var(--cyan);
     outline-offset: 3px;
 }
 
@@ -80,8 +84,8 @@ button:disabled {
     z-index: 100;
     padding: 10px 14px;
     border-radius: var(--radius);
-    background: var(--ink);
-    color: #fff;
+    background: var(--pink);
+    color: #0a0a10;
     font-weight: 800;
     transform: translateY(-150%);
 }
@@ -96,8 +100,8 @@ button:disabled {
     justify-content: center;
     gap: 28px;
     padding: 9px 16px;
-    background: linear-gradient(90deg, var(--blue), var(--pink), var(--yellow));
-    color: #111116;
+    background: linear-gradient(90deg, var(--cyan), var(--pink));
+    color: #0a0a10;
     font-size: 0.78rem;
     font-weight: 900;
     text-transform: uppercase;
@@ -113,7 +117,7 @@ button:disabled {
     align-items: center;
     gap: 20px;
     padding: 12px clamp(16px, 5vw, 64px);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(8, 8, 13, 0.82);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(18px);
 }
@@ -149,7 +153,7 @@ button:disabled {
 
 .site-nav a:hover,
 .site-nav a:focus-visible {
-    background: rgba(21, 21, 27, 0.08);
+    background: rgba(245, 245, 251, 0.08);
     color: var(--ink);
 }
 
@@ -192,25 +196,40 @@ button:disabled {
     padding: 0 6px;
     border: 2px solid var(--surface);
     border-radius: 999px;
-    background: var(--yellow);
-    color: #111116;
+    background: var(--pink);
+    color: #0a0a10;
     font-size: 0.72rem;
     font-weight: 900;
 }
 
 /* ---------- Hero ---------- */
 .hero {
+    position: relative;
     min-height: 620px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 440px);
     align-items: center;
     gap: clamp(28px, 5vw, 72px);
-    padding: clamp(56px, 8vw, 96px) clamp(16px, 5vw, 64px);
+    padding: clamp(56px, 8vw, 96px) clamp(16px, 5vw, 64px) clamp(88px, 10vw, 120px);
     background:
-        linear-gradient(110deg, rgba(17, 17, 22, 0.92), rgba(17, 17, 22, 0.64)),
-        radial-gradient(circle at 74% 30%, rgba(255, 63, 159, 0.32), transparent 22rem),
-        #08080c;
+        radial-gradient(circle at 78% 22%, rgba(0, 240, 255, 0.24), transparent 24rem),
+        radial-gradient(circle at 14% 82%, rgba(255, 47, 158, 0.28), transparent 24rem),
+        linear-gradient(160deg, #0c0c14, #08080d);
     color: #fff;
+}
+
+/* Signature: the shop's paint drips down from the hero into the page. */
+@media (min-width: 561px) {
+    .hero {
+        clip-path: polygon(
+            0 0, 100% 0, 100% 92%,
+            96% 100%, 92% 91%, 88% 100%, 84% 92%, 80% 100%,
+            76% 93%, 72% 100%, 68% 92%, 64% 100%, 60% 93%,
+            56% 100%, 52% 92%, 48% 100%, 44% 93%, 40% 100%,
+            36% 92%, 32% 100%, 28% 93%, 24% 100%, 20% 92%,
+            16% 100%, 12% 93%, 8% 100%, 4% 92%, 0 100%
+        );
+    }
 }
 
 .hero-copy {
@@ -219,8 +238,8 @@ button:disabled {
 
 .eyebrow {
     margin: 0 0 10px;
-    color: var(--yellow);
-    color: color-mix(in srgb, var(--yellow) 72%, currentColor);
+    color: var(--cyan);
+    color: color-mix(in srgb, var(--cyan) 72%, currentColor);
     font-size: 0.78rem;
     font-weight: 900;
     text-transform: uppercase;
@@ -253,7 +272,10 @@ button:disabled {
     height: auto;
     justify-self: center;
     border-radius: 18px;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+    box-shadow:
+        0 0 70px rgba(0, 240, 255, 0.22),
+        0 0 110px rgba(255, 47, 158, 0.16),
+        0 24px 80px rgba(0, 0, 0, 0.5);
 }
 
 .button {
@@ -278,13 +300,15 @@ button:disabled {
 }
 
 .button-primary {
-    background: var(--ink);
-    color: #fff;
+    background: var(--pink);
+    color: #0a0a10;
+    box-shadow: 0 0 0 1px rgba(255, 47, 158, 0.4), 0 16px 40px rgba(255, 47, 158, 0.22);
 }
 
 .hero .button-primary {
-    background: #fff;
-    color: #111116;
+    background: var(--cyan);
+    color: #06060a;
+    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.4), 0 16px 40px rgba(0, 240, 255, 0.22);
 }
 
 .button-secondary {
@@ -335,6 +359,15 @@ button:disabled {
 }
 
 .product-card {
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.product-card:hover {
+    border-color: rgba(0, 240, 255, 0.4);
+    box-shadow: var(--shadow), var(--glow);
+}
+
+.product-card {
     display: grid;
     grid-template-rows: auto 1fr;
     overflow: hidden;
@@ -346,8 +379,8 @@ button:disabled {
     place-items: center;
     padding: 24px;
     background:
-        radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.86), transparent 0 14%, transparent 15%),
-        conic-gradient(from 40deg, var(--yellow), var(--pink), var(--blue), var(--green), var(--orange), var(--yellow));
+        radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.82), transparent 0 14%, transparent 15%),
+        conic-gradient(from 40deg, var(--yellow), var(--pink), var(--cyan), var(--green), var(--orange), var(--yellow));
 }
 
 .product-art span {
@@ -453,8 +486,8 @@ textarea {
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--yellow);
-    color: #111116;
+    background: var(--cyan);
+    color: #06060a;
     font-weight: 900;
 }
 
@@ -483,7 +516,7 @@ textarea {
 }
 
 .contact-links a {
-    color: var(--blue);
+    color: var(--cyan);
 }
 
 /* ---------- Cart modal ---------- */
@@ -493,7 +526,7 @@ textarea {
     z-index: 50;
     display: flex;
     justify-content: flex-end;
-    background: rgba(10, 10, 14, 0.48);
+    background: rgba(3, 3, 6, 0.72);
     opacity: 0;
     pointer-events: none;
     transition: opacity 180ms ease;
@@ -628,8 +661,9 @@ textarea {
     max-width: min(360px, calc(100vw - 36px));
     padding: 13px 15px;
     border-radius: var(--radius);
-    background: #111116;
-    color: #fff;
+    background: var(--surface-2);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: var(--ink);
     box-shadow: var(--shadow);
     opacity: 0;
     transform: translateY(12px);
