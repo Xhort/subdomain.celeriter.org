@@ -3,40 +3,48 @@ Drip Dye storefront for the Celeriter subdomain.
 
 ## How the website is organized
 
-- `index.html` contains the page structure and accessible labels.
+- `index.html` contains the storefront structure and accessible labels.
+- `about.html` and `policies.html` provide the brand story and store policies.
 - `styles.css` contains the design system, responsive layout, and motion/accessibility rules.
-- `script.js` owns the shirt options, saved selection, cart modal, and Stripe Payment Link redirect.
-- `server.js` serves the site and retains an optional Checkout Sessions API for future multi-product carts.
+- `script.js` maps every product—and each shirt size—to its Stripe Payment Link.
+- `server.js` serves the storefront and its optional order/admin API.
 - `backend/catalog.js` is the server's trusted source for products and prices.
 - `backend/database.js` stores orders in PostgreSQL when `DATABASE_URL` exists, or in `.data/orders.json` for local development.
 - `backend/schema.sql` documents the PostgreSQL tables and indexes.
 - `api.py` is a separate FastAPI experiment and is not used by this storefront.
 
-The current first drop sells one $12 shirt through a Stripe-hosted Payment Link.
-The website appends the chosen size and color as supported Stripe reference and
-tracking values, then Stripe collects contact and payment details. Card information
-never passes through this website. Comments explain decisions that are easy to miss,
-rather than repeating what each line already says.
+The current drop sells shirts and bags through Stripe-hosted Checkout. Customers pick
+a product (and a shirt size when needed) and continue directly to its Payment Link.
+Stripe collects the customer's email and payment details, so card information never
+passes through this website.
 
-## Current Stripe payment flow
+## Stripe checkout flow
 
-The live link is stored once as `STRIPE_PAYMENT_LINK` near the top of `script.js`.
-Each checkout is for one shirt. If the product or price changes in Stripe, update the
-display prices in both `script.js` and `backend/catalog.js` so the website stays in
-sync with the hosted payment page.
+The `products` list near the top of `script.js` is the routing table. Each product variant
+stores its label, displayed inventory, and Stripe Payment Link. The selection is also
+sent in Stripe's client reference and campaign parameters.
+
+Every product uses a separate Payment Link and creates a separate Stripe order. There is
+no shopping cart, server-created Checkout Session, or webhook requirement. If a product,
+price, or Payment Link changes, update its entry in `script.js`.
+
+Displayed inventory is informational and must be updated manually. Payment Links do not
+send completed-order inventory changes back to this webhook-free storefront.
+
+The Stripe secret key belongs only in the deployment environment. Never add a secret
+or restricted key to `script.js`, HTML, or another public file. In Stripe's live-mode
+Customer emails settings, enable **Successful payments** to email receipts after
+payment.
 
 ## Run it locally
 
 1. Install Node.js 18 or newer and pnpm.
 2. Run `pnpm install`.
-3. The current Payment Link needs no secret Stripe key on this website. Copy
-   `.env.example` to `.env` only when testing the optional server checkout API.
-4. Run `pnpm dev` and open `http://localhost:3000`.
+3. Run `pnpm dev` and open `http://localhost:3000`.
 
 Without `DATABASE_URL`, orders are saved locally in the ignored `.data` folder.
-For a real deployment, set `NODE_ENV=production`, use a PostgreSQL database, set
-`PUBLIC_URL` to the exact public origin, and configure Stripe to send webhooks to
-`/api/stripe/webhook`.
+The storefront can be deployed as static files because checkout uses hosted Payment Links.
+Replace every test link in `script.js` with its live-mode Stripe Payment Link before launch.
 
 ## Business notes
 

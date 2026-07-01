@@ -16,7 +16,15 @@ CREATE TABLE IF NOT EXISTS orders (
     status TEXT NOT NULL DEFAULT 'checkout_pending',
     stripe_checkout_session_id TEXT,
     stripe_payment_intent_id TEXT,
+    inventory_expires_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS product_inventory (
+    product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    size TEXT NOT NULL,
+    stock_limit INTEGER NOT NULL CHECK (stock_limit >= 0),
+    PRIMARY KEY (product_id, size)
 );
 
 CREATE TABLE IF NOT EXISTS order_items (
@@ -41,3 +49,6 @@ CREATE INDEX IF NOT EXISTS orders_created_at_idx
 CREATE INDEX IF NOT EXISTS orders_stripe_session_idx
     ON orders(stripe_checkout_session_id)
     WHERE stripe_checkout_session_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS orders_inventory_idx
+    ON orders(status, inventory_expires_at);
