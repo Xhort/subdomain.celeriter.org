@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Shop a handmade Drip Dye tie-dye T-shirt in your choice of size and primary color.">
-    <meta name="theme-color" content="#15151b">
+    <meta name="theme-color" content="#000000">
     <title>Drip Dye | Handmade Tie-Dye Goods</title>
 
-    <!-- Preconnects shorten the setup time for the two font files used below. -->
+    <!-- Preconnects shorten the setup time for the font files used below. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Permanent+Marker&display=swap" rel="stylesheet">
     <!-- Preloading the likely hero size helps the main image appear sooner. -->
     <link
         rel="preload"
@@ -65,21 +65,29 @@
                     Drip Dye is starting with one handmade essential: a tie-dye T-shirt.
                     Pick your size and a primary color, then pay securely through Stripe.
                 </p>
+                <ul class="trust-pills" aria-label="Product highlights">
+                    <li class="pill pill-cyan">Handmade</li>
+                    <li class="pill pill-pink">One of one</li>
+                    <li class="pill pill-purple">Primary colors</li>
+                </ul>
                 <a class="button button-primary" href="#shop">
                     Shop the drop
                 </a>
             </div>
-            <img
-                class="hero-logo"
-                src="./assets/drip-dye-logo-430.webp"
-                srcset="./assets/drip-dye-logo-430.webp 430w, ./assets/drip-dye-logo-860.webp 860w"
-                sizes="(max-width: 860px) 320px, 430px"
-                width="860"
-                height="860"
-                alt="Colorful Drip Dye paint-drop logo"
-                decoding="async"
-                fetchpriority="high"
-            >
+            <div class="hero-art">
+                <img
+                    class="hero-logo"
+                    src="./assets/drip-dye-logo-430.webp"
+                    srcset="./assets/drip-dye-logo-430.webp 430w, ./assets/drip-dye-logo-860.webp 860w"
+                    sizes="(max-width: 860px) 320px, 430px"
+                    width="860"
+                    height="860"
+                    alt="Colorful Drip Dye paint-drop logo"
+                    decoding="async"
+                    fetchpriority="high"
+                >
+                <span class="hand-note" aria-hidden="true">one of one!</span>
+            </div>
         </section>
 
         <!-- Product cards are rendered from the catalog in script.js. -->

@@ -1,18 +1,21 @@
 :root {
     /* Central design tokens make colors, spacing, and shapes easy to change. */
-    --bg: #08080d;
-    --surface: #131320;
-    --surface-2: #1b1b2b;
-    --ink: #f5f5fb;
-    --muted: #9d9db4;
-    --line: rgba(245, 245, 251, 0.13);
+    --bg: #000000;
+    --surface: #0c0c11;
+    --surface-2: #16161f;
+    --ink: #f7f7fb;
+    --muted: #9c9cb3;
+    --line: rgba(247, 247, 251, 0.13);
     --cyan: #00f0ff;
     --pink: #ff2f9e;
+    --purple: #9b6bff;
     --blue: #0aa6ff;
     --yellow: #ffd84d;
     --green: #30d876;
     --orange: #ff7a1a;
-    --shadow: 0 20px 54px rgba(0, 0, 0, 0.5);
+    --font-display: "Fraunces", Georgia, serif;
+    --font-mark: "Permanent Marker", cursive;
+    --shadow: 0 20px 54px rgba(0, 0, 0, 0.6);
     --glow: 0 0 0 1px rgba(0, 240, 255, 0.18), 0 0 44px rgba(255, 47, 158, 0.16);
     --radius: 8px;
 }
@@ -117,7 +120,7 @@ button:disabled {
     align-items: center;
     gap: 20px;
     padding: 12px clamp(16px, 5vw, 64px);
-    background: rgba(8, 8, 13, 0.82);
+    background: rgba(0, 0, 0, 0.84);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(18px);
 }
@@ -129,6 +132,13 @@ button:disabled {
     font-family: "Space Grotesk", Inter, sans-serif;
     font-size: 1.2rem;
     font-weight: 800;
+}
+
+.brand span {
+    background: linear-gradient(90deg, var(--cyan), var(--pink) 62%, var(--purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .brand-logo {
@@ -250,14 +260,17 @@ button:disabled {
 .contact-section h2,
 .cart-header h2 {
     margin: 0;
-    font-family: "Space Grotesk", Inter, sans-serif;
+    font-family: var(--font-display);
+    font-weight: 700;
     letter-spacing: 0;
 }
 
 .hero h1 {
     max-width: 760px;
-    font-size: clamp(3rem, 8vw, 6.8rem);
-    line-height: 0.92;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(3rem, 8vw, 6.4rem);
+    line-height: 0.98;
 }
 
 .hero p {
@@ -267,15 +280,72 @@ button:disabled {
     font-size: 1.08rem;
 }
 
-.hero-logo {
-    width: min(100%, 430px);
-    height: auto;
+.trust-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 28px;
+    padding: 0;
+    list-style: none;
+}
+
+.pill {
+    padding: 8px 15px;
+    border: 1px solid;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.pill-cyan {
+    background: rgba(0, 240, 255, 0.12);
+    border-color: rgba(0, 240, 255, 0.45);
+    color: var(--cyan);
+}
+
+.pill-pink {
+    background: rgba(255, 47, 158, 0.12);
+    border-color: rgba(255, 47, 158, 0.45);
+    color: var(--pink);
+}
+
+.pill-purple {
+    background: rgba(155, 107, 255, 0.14);
+    border-color: rgba(155, 107, 255, 0.5);
+    color: var(--purple);
+}
+
+.hero-art {
+    position: relative;
     justify-self: center;
+    width: min(100%, 430px);
+}
+
+.hero-logo {
+    width: 100%;
+    height: auto;
+    display: block;
     border-radius: 18px;
     box-shadow:
         0 0 70px rgba(0, 240, 255, 0.22),
         0 0 110px rgba(255, 47, 158, 0.16),
         0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+/* Signature marker note, echoing the brand's hand-drawn "scan me" callouts. */
+.hand-note {
+    position: absolute;
+    top: -10px;
+    right: -6px;
+    padding: 7px 16px 5px;
+    background: var(--pink);
+    color: #0a0a10;
+    font-family: var(--font-mark);
+    font-size: 1.15rem;
+    line-height: 1;
+    transform: rotate(-7deg);
+    border-radius: 999px;
+    box-shadow: 0 10px 24px rgba(255, 47, 158, 0.35);
 }
 
 .button {
@@ -341,6 +411,16 @@ button:disabled {
     color: var(--muted);
 }
 
+.steps-section .eyebrow {
+    color: var(--purple);
+    color: color-mix(in srgb, var(--purple) 78%, currentColor);
+}
+
+.contact-section .eyebrow {
+    color: var(--green);
+    color: color-mix(in srgb, var(--green) 78%, currentColor);
+}
+
 .product-grid {
     display: grid;
     grid-template-columns: minmax(0, 420px);
@@ -380,7 +460,7 @@ button:disabled {
     padding: 24px;
     background:
         radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.82), transparent 0 14%, transparent 15%),
-        conic-gradient(from 40deg, var(--yellow), var(--pink), var(--cyan), var(--green), var(--orange), var(--yellow));
+        conic-gradient(from 40deg, var(--yellow), var(--pink), var(--purple), var(--cyan), var(--green), var(--orange), var(--yellow));
 }
 
 .product-art span {
@@ -417,11 +497,14 @@ button:disabled {
 
 .product-topline strong {
     font-size: 1.2rem;
+    color: var(--pink);
 }
 
 .product-card h3 {
     margin: 12px 0 8px;
-    font-size: 1.35rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
 }
 
 .product-card p {
@@ -486,13 +569,27 @@ textarea {
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--cyan);
     color: #06060a;
     font-weight: 900;
 }
 
+.steps-grid article:nth-child(1) span {
+    background: var(--cyan);
+}
+
+.steps-grid article:nth-child(2) span {
+    background: var(--pink);
+}
+
+.steps-grid article:nth-child(3) span {
+    background: var(--purple);
+    color: #fff;
+}
+
 .steps-grid h3 {
     margin: 18px 0 8px;
+    font-family: var(--font-display);
+    font-weight: 600;
 }
 
 .steps-grid p {
@@ -646,6 +743,10 @@ textarea {
     font-size: 1.12rem;
 }
 
+.subtotal-row strong {
+    color: var(--pink);
+}
+
 .checkout-note,
 .empty-state {
     margin: 0;
@@ -727,7 +828,7 @@ textarea {
         grid-template-columns: 1fr;
     }
 
-    .hero-logo {
+    .hero-art {
         max-width: 320px;
         order: -1;
     }
