@@ -30,3 +30,14 @@ CREATE TABLE IF NOT EXISTS order_items (
     unit_price_cents INTEGER NOT NULL CHECK (unit_price_cents >= 0),
     line_total_cents INTEGER NOT NULL CHECK (line_total_cents >= 0)
 );
+
+-- These indexes speed up the three lookups used by the order/admin code.
+CREATE INDEX IF NOT EXISTS order_items_order_id_idx
+    ON order_items(order_id);
+
+CREATE INDEX IF NOT EXISTS orders_created_at_idx
+    ON orders(created_at DESC);
+
+CREATE INDEX IF NOT EXISTS orders_stripe_session_idx
+    ON orders(stripe_checkout_session_id)
+    WHERE stripe_checkout_session_id IS NOT NULL;

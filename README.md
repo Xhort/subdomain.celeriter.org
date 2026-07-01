@@ -1,5 +1,44 @@
 # subdomain.celeriter.org
-Subdomain of the Celeriter website
+Drip Dye storefront for the Celeriter subdomain.
+
+## How the website is organized
+
+- `index.html` contains the page structure and accessible labels.
+- `styles.css` contains the design system, responsive layout, and motion/accessibility rules.
+- `script.js` owns the shirt options, saved selection, cart modal, and Stripe Payment Link redirect.
+- `server.js` serves the site and retains an optional Checkout Sessions API for future multi-product carts.
+- `backend/catalog.js` is the server's trusted source for products and prices.
+- `backend/database.js` stores orders in PostgreSQL when `DATABASE_URL` exists, or in `.data/orders.json` for local development.
+- `backend/schema.sql` documents the PostgreSQL tables and indexes.
+- `api.py` is a separate FastAPI experiment and is not used by this storefront.
+
+The current first drop sells one $12 shirt through a Stripe-hosted Payment Link.
+The website appends the chosen size and color as supported Stripe reference and
+tracking values, then Stripe collects contact and payment details. Card information
+never passes through this website. Comments explain decisions that are easy to miss,
+rather than repeating what each line already says.
+
+## Current Stripe payment flow
+
+The live link is stored once as `STRIPE_PAYMENT_LINK` near the top of `script.js`.
+Each checkout is for one shirt. If the product or price changes in Stripe, update the
+display prices in both `script.js` and `backend/catalog.js` so the website stays in
+sync with the hosted payment page.
+
+## Run it locally
+
+1. Install Node.js 18 or newer and pnpm.
+2. Run `pnpm install`.
+3. The current Payment Link needs no secret Stripe key on this website. Copy
+   `.env.example` to `.env` only when testing the optional server checkout API.
+4. Run `pnpm dev` and open `http://localhost:3000`.
+
+Without `DATABASE_URL`, orders are saved locally in the ignored `.data` folder.
+For a real deployment, set `NODE_ENV=production`, use a PostgreSQL database, set
+`PUBLIC_URL` to the exact public origin, and configure Stripe to send webhooks to
+`/api/stripe/webhook`.
+
+## Business notes
 
 
 Starting a tie dye shirt business would allow me to design creative and unique shirts for school events, sports teams, clubs, and everyday fashion. I would use quality materials and different color patterns to make my shirts stand out and look more professional. I could sell them through social media, local events, and word of mouth to attract customers. Offering custom designs for teams, birthdays, and special events would help increase profit and allow my business to grow over time.

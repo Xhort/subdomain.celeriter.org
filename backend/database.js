@@ -6,6 +6,8 @@ const { products } = require("./catalog");
 const connectionString = process.env.DATABASE_URL;
 const dataDirectory = process.env.DATA_DIR || path.join(__dirname, "..", ".data");
 const fileStorePath = path.join(dataDirectory, "orders.json");
+const catalogProductById = new Map(products.map((product) => [product.id, product]));
+let fileMutationQueue = Promise.resolve();
 
 const pool = connectionString
     ? new Pool({
@@ -27,6 +29,8 @@ function defaultStore() {
     return { nextOrderId: 1, orders: [] };
 }
 
+/* ---------- Local JSON storage (used when PostgreSQL is not configured) ---------- */
+
 async function readFileStore() {
     try {
         const contents = await fs.readFile(fileStorePath, "utf8");
@@ -44,14 +48,33 @@ async function readFileStore() {
 
 async function writeFileStore(store) {
     await fs.mkdir(dataDirectory, { recursive: true });
-    await fs.writeFile(fileStorePath, `${JSON.stringify(store, null, 2)}\n`);
+    const temporaryPath = `${fileStorePath}.${process.pid}.tmp`;
+
+    // Rename is atomic on a single filesystem, so readers never see half a file.
+    await fs.writeFile(temporaryPath, `${JSON.stringify(store, null, 2)}\n`);
+    await fs.rename(temporaryPath, fileStorePath);
+}
+
+/**
+ * Serialize the read-change-write cycle. Without this queue, simultaneous orders
+ * could read the same next ID and the later write could erase the earlier order.
+ */
+function mutateFileStore(mutator) {
+    const operation = fileMutationQueue.then(async () => {
+        const store = await readFileStore();
+        const result = await mutator(store);
+        await writeFileStore(store);
+        return result;
+    });
+
+    // Keep the queue usable after a failed operation while returning that failure.
+    fileMutationQueue = operation.catch(() => undefined);
+    return operation;
 }
 
 function buildOrderItems(payload) {
-    const productById = new Map(products.map((product) => [product.id, product]));
-
     return payload.items.map((item) => {
-        const product = productById.get(item.productId);
+        const product = catalogProductById.get(item.productId);
         if (!product) {
             const error = new Error(`Unknown product: ${item.productId}`);
             error.statusCode = 400;
@@ -75,32 +98,35 @@ function buildOrderItems(payload) {
 async function createFileOrder(payload) {
     const orderItems = buildOrderItems(payload);
     const subtotalCents = orderItems.reduce((sum, item) => sum + item.lineTotalCents, 0);
-    const store = await readFileStore();
-    const order = {
-        id: store.nextOrderId,
-        customerName: payload.customer.name,
-        customerContact: payload.customer.contact,
-        customerNotes: payload.customer.notes || null,
-        subtotalCents,
-        status: "checkout_pending",
-        stripeCheckoutSessionId: null,
-        stripePaymentIntentId: null,
-        createdAt: new Date().toISOString(),
-        items: orderItems
-    };
 
-    store.nextOrderId = order.id + 1;
-    store.orders.push(order);
-    await writeFileStore(store);
+    return mutateFileStore((store) => {
+        const order = {
+            id: store.nextOrderId,
+            customerName: payload.customer.name,
+            customerContact: payload.customer.contact,
+            customerNotes: payload.customer.notes || null,
+            subtotalCents,
+            status: "checkout_pending",
+            stripeCheckoutSessionId: null,
+            stripePaymentIntentId: null,
+            createdAt: new Date().toISOString(),
+            items: orderItems
+        };
 
-    return {
-        id: order.id,
-        subtotalCents: order.subtotalCents,
-        status: order.status,
-        createdAt: order.createdAt,
-        items: order.items
-    };
+        store.nextOrderId = order.id + 1;
+        store.orders.push(order);
+
+        return {
+            id: order.id,
+            subtotalCents: order.subtotalCents,
+            status: order.status,
+            createdAt: order.createdAt,
+            items: order.items
+        };
+    });
 }
+
+/* ---------- PostgreSQL schema and catalog synchronization ---------- */
 
 async function initDatabase() {
     if (!pool) return;
@@ -149,6 +175,16 @@ async function initDatabase() {
 
         ALTER TABLE orders
         ALTER COLUMN status SET DEFAULT 'checkout_pending';
+
+        CREATE INDEX IF NOT EXISTS order_items_order_id_idx
+            ON order_items(order_id);
+
+        CREATE INDEX IF NOT EXISTS orders_created_at_idx
+            ON orders(created_at DESC);
+
+        CREATE INDEX IF NOT EXISTS orders_stripe_session_idx
+            ON orders(stripe_checkout_session_id)
+            WHERE stripe_checkout_session_id IS NOT NULL;
     `);
 
     for (const product of products) {
@@ -287,20 +323,19 @@ async function createOrder(payload) {
 
 async function attachStripeSession(orderId, sessionId) {
     if (!pool) {
-        const store = await readFileStore();
-        const order = store.orders.find((entry) => String(entry.id) === String(orderId));
-        if (!order) return null;
+        return mutateFileStore((store) => {
+            const order = store.orders.find((entry) => String(entry.id) === String(orderId));
+            if (!order) return null;
 
-        order.stripeCheckoutSessionId = sessionId;
-        order.status = "checkout_started";
-        await writeFileStore(store);
-
-        return {
-            id: order.id,
-            subtotalCents: order.subtotalCents,
-            status: order.status,
-            stripeCheckoutSessionId: order.stripeCheckoutSessionId
-        };
+            order.stripeCheckoutSessionId = sessionId;
+            order.status = "checkout_started";
+            return {
+                id: order.id,
+                subtotalCents: order.subtotalCents,
+                status: order.status,
+                stripeCheckoutSessionId: order.stripeCheckoutSessionId
+            };
+        });
     }
 
     const db = requireDatabase();
@@ -320,19 +355,18 @@ async function attachStripeSession(orderId, sessionId) {
 
 async function markOrderPaidBySession(sessionId, paymentIntentId) {
     if (!pool) {
-        const store = await readFileStore();
-        const order = store.orders.find((entry) => entry.stripeCheckoutSessionId === sessionId);
-        if (!order) return null;
+        return mutateFileStore((store) => {
+            const order = store.orders.find((entry) => entry.stripeCheckoutSessionId === sessionId);
+            if (!order) return null;
 
-        order.status = "paid";
-        order.stripePaymentIntentId = paymentIntentId || null;
-        await writeFileStore(store);
-
-        return {
-            id: order.id,
-            subtotalCents: order.subtotalCents,
-            status: order.status
-        };
+            order.status = "paid";
+            order.stripePaymentIntentId = paymentIntentId || null;
+            return {
+                id: order.id,
+                subtotalCents: order.subtotalCents,
+                status: order.status
+            };
+        });
     }
 
     const db = requireDatabase();
