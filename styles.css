@@ -1,5 +1,4 @@
 :root {
-    /* Central design tokens make colors, spacing, and shapes easy to change. */
     --bg: #fbfbff;
     --surface: #ffffff;
     --ink: #15151b;
@@ -34,13 +33,6 @@ body.cart-open {
     overflow: hidden;
 }
 
-/* Anchored sections stop below the sticky header instead of hiding behind it. */
-#shop,
-#how,
-#contact {
-    scroll-margin-top: 96px;
-}
-
 img {
     display: block;
     max-width: 100%;
@@ -62,35 +54,6 @@ button {
     cursor: pointer;
 }
 
-button:disabled {
-    cursor: wait;
-    opacity: 0.65;
-}
-
-/* A consistent, high-contrast focus ring makes keyboard navigation visible. */
-:where(a, button, input, select, textarea):focus-visible {
-    outline: 3px solid var(--blue);
-    outline-offset: 3px;
-}
-
-.skip-link {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 100;
-    padding: 10px 14px;
-    border-radius: var(--radius);
-    background: var(--ink);
-    color: #fff;
-    font-weight: 800;
-    transform: translateY(-150%);
-}
-
-.skip-link:focus {
-    transform: translateY(0);
-}
-
-/* ---------- Announcement and navigation ---------- */
 .promo-bar {
     display: flex;
     justify-content: center;
@@ -151,6 +114,7 @@ button:disabled {
 .site-nav a:focus-visible {
     background: rgba(21, 21, 27, 0.08);
     color: var(--ink);
+    outline: none;
 }
 
 .cart-toggle,
@@ -167,18 +131,6 @@ button:disabled {
 
 .cart-toggle {
     position: relative;
-}
-
-.cart-toggle svg {
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.close-cart span {
-    font-size: 1.5rem;
-    line-height: 1;
 }
 
 .cart-count {
@@ -198,7 +150,6 @@ button:disabled {
     font-weight: 900;
 }
 
-/* ---------- Hero ---------- */
 .hero {
     min-height: 620px;
     display: grid;
@@ -219,7 +170,6 @@ button:disabled {
 
 .eyebrow {
     margin: 0 0 10px;
-    color: var(--yellow);
     color: color-mix(in srgb, var(--yellow) 72%, currentColor);
     font-size: 0.78rem;
     font-weight: 900;
@@ -250,7 +200,6 @@ button:disabled {
 
 .hero-logo {
     width: min(100%, 430px);
-    height: auto;
     justify-self: center;
     border-radius: 18px;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
@@ -266,7 +215,6 @@ button:disabled {
     border-radius: var(--radius);
     padding: 12px 18px;
     font-weight: 900;
-    transition: transform 150ms ease, filter 150ms ease;
 }
 
 .button svg,
@@ -293,7 +241,6 @@ button:disabled {
     color: var(--ink);
 }
 
-/* ---------- Shared sections and product cards ---------- */
 .section {
     padding: clamp(54px, 8vw, 92px) clamp(16px, 5vw, 64px);
 }
@@ -319,8 +266,7 @@ button:disabled {
 
 .product-grid {
     display: grid;
-    grid-template-columns: minmax(0, 420px);
-    justify-content: center;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
 }
 
@@ -335,8 +281,6 @@ button:disabled {
 }
 
 .product-card {
-    display: grid;
-    grid-template-rows: auto 1fr;
     overflow: hidden;
 }
 
@@ -363,8 +307,6 @@ button:disabled {
 }
 
 .product-info {
-    display: flex;
-    flex-direction: column;
     padding: 18px;
 }
 
@@ -398,7 +340,6 @@ button:disabled {
 .options-grid {
     display: grid;
     gap: 10px;
-    margin-top: auto;
     margin-bottom: 16px;
 }
 
@@ -421,22 +362,6 @@ textarea {
     color: var(--ink);
 }
 
-textarea {
-    resize: vertical;
-}
-
-.noscript-message {
-    max-width: 680px;
-    margin: 24px auto 0;
-    padding: 14px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--muted);
-    text-align: center;
-}
-
-/* ---------- How it works and contact ---------- */
 .steps-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -486,7 +411,6 @@ textarea {
     color: var(--blue);
 }
 
-/* ---------- Cart modal ---------- */
 .cart-drawer {
     position: fixed;
     inset: 0;
@@ -507,9 +431,8 @@ textarea {
 .cart-panel {
     width: min(100%, 440px);
     height: 100%;
-    height: 100dvh;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
     border-radius: 0;
     overflow: hidden;
     transform: translateX(100%);
@@ -542,7 +465,6 @@ textarea {
     gap: 12px;
     padding: 18px;
     overflow: auto;
-    overscroll-behavior: contain;
 }
 
 .cart-item {
@@ -581,19 +503,11 @@ textarea {
 }
 
 .quantity-row button {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
 }
 
-.quantity-row span {
-    color: var(--muted);
-    font-size: 0.9rem;
-    font-weight: 700;
-}
-
-.quantity-row .remove-item {
-    width: auto;
-    height: auto;
+.remove-item {
     padding: 7px 10px;
     color: var(--pink);
 }
@@ -601,10 +515,7 @@ textarea {
 .checkout-form {
     display: grid;
     gap: 12px;
-    max-height: 62dvh;
     border-top: 1px solid var(--line);
-    overflow-y: auto;
-    overscroll-behavior: contain;
 }
 
 .subtotal-row {
@@ -652,26 +563,6 @@ textarea {
     color: var(--muted);
 }
 
-/* Delay below-the-fold painting without changing document layout. */
-.steps-section,
-.contact-section,
-.site-footer {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 420px;
-}
-
-@media (hover: hover) {
-    .button:hover {
-        filter: brightness(1.08);
-        transform: translateY(-1px);
-    }
-
-    .contact-links a:hover {
-        text-decoration: underline;
-        text-underline-offset: 3px;
-    }
-}
-
 @media (max-width: 860px) {
     .promo-bar {
         flex-wrap: wrap;
@@ -711,17 +602,5 @@ textarea {
     .site-footer {
         align-items: flex-start;
         flex-direction: column;
-    }
-}
-
-/* Respect users who prefer less animation, including smooth scrolling. */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
     }
 }

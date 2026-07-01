@@ -3,30 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shop a handmade Drip Dye tie-dye T-shirt in your choice of size and primary color.">
-    <meta name="theme-color" content="#15151b">
+    <meta name="description" content="Drip Dye sells handmade tie-dye T-shirts, tote bags, and drawstring bags.">
     <title>Drip Dye | Handmade Tie-Dye Goods</title>
-
-    <!-- Preconnects shorten the setup time for the two font files used below. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-    <!-- Preloading the likely hero size helps the main image appear sooner. -->
-    <link
-        rel="preload"
-        as="image"
-        href="./assets/drip-dye-logo-430.webp"
-        imagesrcset="./assets/drip-dye-logo-430.webp 430w, ./assets/drip-dye-logo-860.webp 860w"
-        imagesizes="(max-width: 860px) 320px, 430px"
-        fetchpriority="high"
-    >
-    <link rel="stylesheet" href="./styles.css?v=20260630-3">
+    <link rel="stylesheet" href="./styles.css?v=20260630">
 </head>
 <body>
-    <!-- Keyboard users can bypass the repeated navigation and jump to the shop. -->
-    <a class="skip-link" href="#shop">Skip to products</a>
-
-    <!-- Short trust signals appear before the main navigation. -->
     <div class="promo-bar">
         <span>Handmade tie-dye</span>
         <span>Each item is one of one</span>
@@ -35,7 +19,7 @@
 
     <header class="site-header">
         <a class="brand" href="#top" aria-label="Drip Dye home">
-            <img class="brand-logo" src="./assets/drip-dye-logo-96.webp" width="96" height="96" alt="" aria-hidden="true">
+            <img class="brand-logo" src="./assets/drip-dye-logo.png" alt="" aria-hidden="true">
             <span>Drip Dye</span>
         </a>
 
@@ -45,56 +29,40 @@
             <a href="#contact">Contact</a>
         </nav>
 
-        <button class="cart-toggle" type="button" aria-label="Review shirt order" aria-controls="cartDrawer" aria-expanded="false">
-            <!-- This small inline icon removes a blocking third-party icon script. -->
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M6 8h12l1 12H5L6 8Z"></path>
-                <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
-            </svg>
+        <button class="cart-toggle" type="button" aria-label="Open shopping bag">
+            <i data-lucide="shopping-bag" aria-hidden="true"></i>
             <span class="cart-count" data-cart-count>0</span>
         </button>
     </header>
 
     <main id="top">
-        <!-- Hero: one clear promise and one primary action. -->
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-copy">
-                <p class="eyebrow">The first drop</p>
+                <p class="eyebrow">Simple first drop</p>
                 <h1 id="hero-title">Handmade color, made to order.</h1>
                 <p>
-                    Drip Dye is starting with one handmade essential: a tie-dye T-shirt.
-                    Pick your size and a primary color, then pay securely through Stripe.
+                    Drip Dye is starting with three essentials: tie-dye T-shirts, tote bags,
+                    and drawstring bags. Pick a primary color and we will make a unique piece
+                    in that color family.
                 </p>
                 <a class="button button-primary" href="#shop">
+                    <i data-lucide="sparkles" aria-hidden="true"></i>
                     Shop the drop
                 </a>
             </div>
-            <img
-                class="hero-logo"
-                src="./assets/drip-dye-logo-430.webp"
-                srcset="./assets/drip-dye-logo-430.webp 430w, ./assets/drip-dye-logo-860.webp 860w"
-                sizes="(max-width: 860px) 320px, 430px"
-                width="860"
-                height="860"
-                alt="Colorful Drip Dye paint-drop logo"
-                decoding="async"
-                fetchpriority="high"
-            >
+            <img class="hero-logo" src="./assets/drip-dye-logo.png" alt="Drip Dye logo">
         </section>
 
-        <!-- Product cards are rendered from the catalog in script.js. -->
         <section class="section shop-section" id="shop" aria-labelledby="shop-title">
             <div class="section-heading">
                 <p class="eyebrow">Shop</p>
-                <h2 id="shop-title">One shirt, five color choices</h2>
-                <p>Choose red, blue, green, orange, or yellow. Every $12 shirt is handmade, so no two patterns will look exactly alike.</p>
+                <h2 id="shop-title">Three items, five color choices</h2>
+                <p>Choose red, blue, green, orange, or yellow. Every dye pattern is handmade, so no two items will look exactly alike.</p>
             </div>
 
-            <div class="product-grid" id="productGrid"></div>
-            <noscript><p class="noscript-message">Please enable JavaScript to choose product options and use the shopping bag.</p></noscript>
+            <div class="product-grid" id="productGrid" aria-live="polite"></div>
         </section>
 
-        <!-- A short explanation reduces uncertainty before checkout. -->
         <section class="section steps-section" id="how" aria-labelledby="how-title">
             <div class="section-heading">
                 <p class="eyebrow">How it works</p>
@@ -103,12 +71,12 @@
             <div class="steps-grid">
                 <article>
                     <span>1</span>
-                    <h3>Choose your size</h3>
-                    <p>Select small, medium, large, or extra large.</p>
+                    <h3>Pick your item</h3>
+                    <p>Select a T-shirt, tote bag, or drawstring bag.</p>
                 </article>
                 <article>
                     <span>2</span>
-                    <h3>Pick a color</h3>
+                    <h3>Choose a color</h3>
                     <p>Pick one primary color. The final tie-dye pattern will be unique.</p>
                 </article>
                 <article>
@@ -133,37 +101,42 @@
         </section>
     </main>
 
-    <!--
-        `inert` keeps hidden checkout controls out of the keyboard tab order.
-        JavaScript removes it only while this modal drawer is open.
-    -->
-    <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" aria-hidden="true" inert>
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true" aria-label="Shopping bag">
         <div class="cart-panel">
             <div class="cart-header">
                 <div>
                     <p class="eyebrow">Checkout</p>
-                    <h2 id="cart-title">Your shirt</h2>
+                    <h2>Your bag</h2>
                 </div>
-                <button class="icon-button close-cart" type="button" aria-label="Close shirt order">
-                    <span aria-hidden="true">&times;</span>
+                <button class="icon-button close-cart" type="button" aria-label="Close shopping bag">
+                    <i data-lucide="x" aria-hidden="true"></i>
                 </button>
             </div>
 
             <div class="cart-items" id="cartItems"></div>
 
-            <!--
-                Stripe's Payment Link collects contact and payment details. Keeping
-                those fields off this site means card information never touches it.
-            -->
             <form class="checkout-form" id="checkoutForm">
                 <div class="subtotal-row">
                     <span>Subtotal</span>
                     <strong id="cartSubtotal">$0</strong>
                 </div>
+                <label>
+                    Name
+                    <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+                </label>
+                <label>
+                    Notes
+                    <textarea name="notes" rows="3" placeholder="Pickup, delivery, sizing, or timing notes"></textarea>
+                </label>
                 <button class="button button-primary checkout-button" type="submit">
-                    <span class="checkout-button-label">Pay $12 with Stripe</span>
+                    <i data-lucide="credit-card" aria-hidden="true"></i>
+                    Continue to secure checkout
                 </button>
-                <p class="checkout-note">One shirt per payment. Your selected size and color are attached to the Stripe checkout reference.</p>
+                <p class="checkout-note">Payment is processed by Stripe. Taxes and shipping can be configured in Stripe.</p>
             </form>
         </div>
     </aside>
@@ -172,12 +145,13 @@
 
     <footer class="site-footer">
         <a class="brand" href="#top" aria-label="Drip Dye home">
-            <img class="brand-logo" src="./assets/drip-dye-logo-96.webp" width="96" height="96" alt="" aria-hidden="true" loading="lazy" decoding="async">
+            <img class="brand-logo" src="./assets/drip-dye-logo.png" alt="" aria-hidden="true">
             <span>Drip Dye</span>
         </a>
-        <p>Handmade, one-of-one tie-dye T-shirts.</p>
+        <p>Handmade tie-dye T-shirts, tote bags, and drawstring bags.</p>
     </footer>
 
-    <script src="./script.js?v=20260630-3"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="./script.js?v=20260630"></script>
 </body>
 </html>
