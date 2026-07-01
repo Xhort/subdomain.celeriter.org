@@ -8,7 +8,6 @@ const products = Object.freeze([
         priceCents: 1200,
         shortName: "TEE",
         description: "A handmade cotton tie-dye tee. Every pattern is one of a kind.",
-        colors: Object.freeze(["Red", "Blue", "Green", "Orange", "Yellow"]),
         variants: Object.freeze([
             Object.freeze({ value: "S", label: "Small", stock: 3, paymentLink: "https://buy.stripe.com/test_cNi4gsgXwbMm37P7pyfEk05" }),
             Object.freeze({ value: "M", label: "Medium", stock: 5, paymentLink: "https://buy.stripe.com/test_eVq9AM4aKcQq7o5fW4fEk04" }),
