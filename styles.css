@@ -163,18 +163,6 @@ button:disabled {
     color: var(--ink);
 }
 
-.bag-link span {
-    display: inline-grid;
-    min-width: 22px;
-    min-height: 22px;
-    place-items: center;
-    margin-left: 3px;
-    border-radius: 999px;
-    background: var(--pink);
-    color: #08080d;
-    font-size: 0.72rem;
-}
-
 /* ---------- Hero ---------- */
 .hero {
     position: relative;
@@ -576,13 +564,8 @@ button:disabled {
     cursor: not-allowed;
 }
 
-.color-choice,
-.quantity-choice {
+.color-choice {
     margin-bottom: 16px;
-}
-
-.quantity-choice input {
-    max-width: 110px;
 }
 
 .selection-summary {
@@ -647,108 +630,20 @@ textarea {
     text-align: center;
 }
 
-/* ---------- Multi-item shopping bag ---------- */
-.shopping-bag {
-    max-width: 858px;
-    margin: 28px auto 0;
-    padding: clamp(20px, 4vw, 30px);
-    border: 1px solid rgba(155, 107, 255, 0.45);
-    border-radius: var(--radius);
-    background: linear-gradient(145deg, var(--surface), rgba(155, 107, 255, 0.08));
-    box-shadow: var(--shadow);
-    scroll-margin-top: 96px;
-}
-
-.bag-heading {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--line);
-}
-
-.bag-heading h3 {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 3vw, 2.3rem);
-}
-
-.bag-heading > strong {
-    color: var(--cyan);
-    font-size: 1.35rem;
-}
-
-.bag-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.bag-item {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto auto;
-    align-items: center;
-    gap: 16px;
-    padding: 17px 0;
-    border-bottom: 1px solid var(--line);
-}
-
-.bag-item small {
-    display: block;
-    margin-top: 3px;
-    color: var(--muted);
-}
-
-.bag-quantity {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.bag-quantity button {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--surface-2);
-    color: var(--ink);
-    font-weight: 900;
-}
-
-.remove-item {
-    border: 0;
-    background: transparent;
-    color: var(--pink);
-    font-size: 0.78rem;
-    font-weight: 800;
-}
-
-.empty-bag {
-    margin: 24px 0;
-    color: var(--muted);
-    text-align: center;
-}
-
-.bag-checkout {
-    width: 100%;
-    margin-top: 20px;
-}
-
-.shopping-bag > .payment-note {
-    margin: 10px 0 0;
-    color: var(--muted);
-    text-align: center;
-    font-size: 0.76rem;
-}
-
+.shop-loading,
 .shop-error {
     grid-column: 1 / -1;
     padding: 20px;
-    border: 1px solid rgba(255, 47, 158, 0.4);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
     background: var(--surface);
-    color: var(--pink);
+    color: var(--muted);
     text-align: center;
+}
+
+.shop-error {
+    border-color: rgba(255, 47, 158, 0.4);
+    color: var(--pink);
 }
 
 /* ---------- How it works and contact ---------- */
@@ -1063,13 +958,6 @@ textarea {
         flex-direction: column;
     }
 
-    .bag-item {
-        grid-template-columns: 1fr auto;
-    }
-
-    .remove-item {
-        justify-self: start;
-    }
 }
 
 /* Respect users who prefer less animation, including smooth scrolling. */

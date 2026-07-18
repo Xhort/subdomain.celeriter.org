@@ -1,142 +1,54 @@
-# subdomain.celeriter.org
-Drip Dye storefront for the Celeriter subdomain.
+# Drip Dye storefront
 
-## How the website is organized
+Static-friendly storefront for Drip Dye products with Stripe-hosted Payment Links.
 
-- `index.html` contains the storefront structure and accessible labels.
-- `about.html` and `policies.html` provide the brand story and store policies.
-- `styles.css` contains the design system, responsive layout, and motion/accessibility rules.
-- `script.js` maps every product—and each shirt size—to its Stripe Payment Link.
-- `server.js` serves the storefront and its optional order/admin API.
-- `backend/catalog.js` is the server's trusted source for products and prices.
-- `backend/database.js` stores orders in PostgreSQL when `DATABASE_URL` exists, or in `.data/orders.json` for local development.
-- `backend/schema.sql` documents the PostgreSQL tables and indexes.
-- `api.py` is a separate FastAPI experiment and is not used by this storefront.
+## Project structure
 
-The current drop sells shirts and bags through Stripe-hosted Checkout. Customers pick
-a product (and a shirt size when needed) and continue directly to its Payment Link.
-Stripe collects the customer's email and payment details, so card information never
-passes through this website.
+- `catalog.json` is the single source of truth for products, prices, variants, Stripe links, and drop limits.
+- `script.js` renders the catalog and safely redirects each selection to Stripe.
+- `index.html`, `about.html`, `policies.html`, and `styles.css` contain the public site.
+- `scripts/configure-stripe-limits.js` applies every `usageLimit` to its Stripe Payment Link.
+- `server.js` and `backend/` provide the optional Node order/admin API and derive their inventory from the same catalog.
+- `test/` checks the catalog, backend inventory mapping, and Stripe synchronization behavior.
 
-## Stripe checkout flow
+## Payment Link limits
 
-The `products` list near the top of `script.js` is the routing table. Each product variant
-stores its label, displayed inventory, and Stripe Payment Link. The selection is also
-sent in Stripe's client reference and campaign parameters.
+Each variant in `catalog.json` has its own `usageLimit`. The value is both the displayed drop limit and Stripe's lifetime limit for completed Checkout Sessions on that Payment Link.
 
-Every product uses a separate Payment Link and creates a separate Stripe order. There is
-no shopping cart, server-created Checkout Session, or webhook requirement. If a product,
-price, or Payment Link changes, update its entry in `script.js`.
+Stripe does not read limits from website code automatically. Apply catalog changes to Stripe with:
 
-Displayed inventory is informational and must be updated manually. Payment Links do not
-send completed-order inventory changes back to this webhook-free storefront.
+```sh
+cp .env.example .env
+# Put the matching Stripe secret key in .env, then:
+pnpm stripe:limits
+```
 
-The Stripe secret key belongs only in the deployment environment. Never add a secret
-or restricted key to `script.js`, HTML, or another public file. In Stripe's live-mode
-Customer emails settings, enable **Successful payments** to email receipts after
-payment.
+The current catalog contains test-mode Payment Links, so use a test-mode `sk_test_…` key. When moving to production, replace every test URL with its live Payment Link, use the corresponding live key, and run the command again. Never commit `.env` or a secret key.
 
-## Run it locally
+The synchronization command is safe to rerun. It updates mismatched links, leaves correct links unchanged, and stops before making updates if any catalog link is missing from the selected Stripe account. When a link reaches its completed-session limit, Stripe closes it and displays the configured sold-out message.
 
-1. Install Node.js 18 or newer and pnpm.
-2. Run `pnpm install`.
-3. Run `pnpm dev` and open `http://localhost:3000`.
+## Local development
 
-Without `DATABASE_URL`, orders are saved locally in the ignored `.data` folder.
-The storefront can be deployed as static files because checkout uses hosted Payment Links.
-Replace every test link in `script.js` with its live-mode Stripe Payment Link before launch.
+Requires Node.js 18 or newer and pnpm.
 
-## Business notes
+```sh
+pnpm install
+pnpm dev
+```
 
+Open `http://localhost:3000`. Without `DATABASE_URL`, optional API orders are saved in the ignored `.data` directory.
 
-Starting a tie dye shirt business would allow me to design creative and unique shirts for school events, sports teams, clubs, and everyday fashion. I would use quality materials and different color patterns to make my shirts stand out and look more professional. I could sell them through social media, local events, and word of mouth to attract customers. Offering custom designs for teams, birthdays, and special events would help increase profit and allow my business to grow over time.
+Run all syntax and behavior checks with:
 
-Tie-Dye Shirt Business
-Price Points:
-* Basic t-shirts (simple designs): $10-13
-* Scrunchies  - $2-5
-* Bandana - $5
-* Bulk/team orders (per shirt): $10–$18
-Why these prices:T-shirts are cheaper to produce, so pricing focuses on design uniqueness and demand. Custom designs can cost more because they take extra time and creativity. Bulk discounts help attract teams, clubs, and events, increasing total sales even if profit per shirt is lower.
+```sh
+pnpm check
+```
 
- 
+## Environment variables
 
-
-Tie-dye shirts
-Our business is succeeding when:
-We consistently sell shirts, receive repeat orders (especially for events and teams), and customers recognize our brand for unique, high-quality designs.
-
-The business can make a profit when:
-The cost of materials (shirts, dye, supplies) is lower than the selling price, and we increase sales through bulk orders, custom designs, and repeat customers.
-
-The problem our business solves is:
-Many people want personalized or unique clothing but don’t have the time, materials, or skill to create their own tie-dye designs.
-
-Our business is special because:
-Every shirt is handmade and one-of-a-kind. We offer custom designs for specific events, teams, and personal styles, making each product unique and meaningful.
-
-Our customers are:
-* Students and teens
-* School clubs and sports teams
-* Families and event planners
-* People looking for unique, colorful clothing
-* Customers wanting personalized gifts
-
-About the Founder
-Contact Us:
-Instagram: @DripDye.coEmail: DripDyefsshion.comPhone: 571-455-6572
-
-We built this business because:
-We wanted to turn creativity into a business by designing fun, colorful clothing that allows people to express themselves and stand out.
-
-How we will reach our customers:
-- Social media (Instagram, TikTok, Snapchat)
-- Selling at school events, games, and local markets
-- Word of mouth from friends and customers
-- Custom orders for teams, clubs, and parties
-
-Your 30-60-90 Day Goals
-
- By the end of 30 Days…
-- Create sample designs and build inventory
-- Set up social media pages
-- Sell first shirts to friends and classmates
-
-By the end of 60 Days…
-- Start taking orders
-- Secure expanded optional designs 
-- Gain a small but steady customer base
-
-By the end of 90 Days…
-- Sell at JMU market 
-- Increase profits and build brand recognition
-- apply logos / packaging  prep for market 
-
-Business name Drip Dye
-Logo - i’m thinking of a logo that includes a drop from a tie-dye bottle in that drop will contain various colors mixed in and maybe as it hits the paper or object, it will essentially splash up to show color, playful, and the use of colors within the business
-I will also ensure unique designs
-
-Business name -Twist 
-Slogans - Turn it your way
-* Where style takes a turn
-* Bend the rules
-Meaning Feels modern, playful, and flexible
-* Works for tie-dye, fashion, accessories, or even creative DIY kits
-Color meaning - Bright orange → energy + boldness
-* Electric purple → creativity + uniqueness
-* Teal/blue mix → calm but modern edge
-* Neon green accents → fun + experimental vibe
-* Black/white base → contrast and “twist effect
-Logo - 
-
-Electric blue - creativity and calm confidence
-Hot pink - bold self-expression
-Sun yellow - energy and happiness
-Purple - imagination and uniqueness
-Teal/green mix - freshness and individuality
-
-Elevator Pitch 
-At Drip Dye, we believe fashion should be bold, creative, and personal. Our tie-dye shirts are made for teens and young adults who want to stand out and express themselves through color and style. Instead of basic fast fashion, Drip Dye creates unique, eye-catching designs that make every shirt feel one-of-a-kind. Our goal is to build a brand that represents confidence, individuality, and creativity while keeping our products affordable and trendy for our target market.”
-
-Refined! 
-Hi, my name is Libby Drake, and my business is called Drip Dye. Drip Dye is a bold, creative tie-dye clothing brand made for teens and young adults who want to express their individuality through color and style. Instead of boring, mass-produced fast fashion, we create handmade, one-of-a-kind pieces that are full of personality and energy. Every shirt is carefully dyed using vibrant color combinations and artistic patterns, so no two pieces are ever the same. Drip Dye solves the problem of everyone dressing alike by giving people clothing that helps them stand out with confidence. What makes us different is our focus on creativity, uniqueness, and connection with our audience through social media, limited drops, and custom designs. Drip Dye isn’t just something you wear but it’s how you stand out, show up, an
+- `STRIPE_SECRET_KEY`: only needed to synchronize Payment Link limits.
+- `DATABASE_URL`: optional PostgreSQL connection for the order/admin API.
+- `DATA_DIR`: optional local order-store directory.
+- `ADMIN_TOKEN`: protects admin order endpoints.
+- `PUBLIC_URL` and `ALLOWED_ORIGINS`: trusted browser origins for the optional API.
+- `NODE_ENV`, `TRUST_PROXY`, and `PORT`: server deployment settings.

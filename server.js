@@ -80,6 +80,7 @@ const publicFiles = new Map([
     ["/index.html", "index.html"],
     ["/about.html", "about.html"],
     ["/policies.html", "policies.html"],
+    ["/catalog.json", "catalog.json"],
     ["/styles.css", "styles.css"],
     ["/script.js", "script.js"]
 ]);

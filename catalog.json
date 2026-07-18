@@ -1,0 +1,92 @@
+{
+  "currency": "usd",
+  "campaign": "first_drop",
+  "products": [
+    {
+      "id": "tie-dye-tshirt",
+      "name": "Tie Dye T-shirt",
+      "category": "Shirt",
+      "priceCents": 1200,
+      "shortName": "TEE",
+      "description": "A handmade cotton tie-dye tee. Every pattern is one of a kind.",
+      "colors": ["Red", "Blue", "Green", "Orange", "Yellow"],
+      "variants": [
+        {
+          "value": "S",
+          "label": "Small",
+          "usageLimit": 1,
+          "paymentLink": "https://buy.stripe.com/test_cNi4gsgXwbMm37P7pyfEk05"
+        },
+        {
+          "value": "M",
+          "label": "Medium",
+          "usageLimit": 5,
+          "paymentLink": "https://buy.stripe.com/test_eVq9AM4aKcQq7o5fW4fEk04"
+        },
+        {
+          "value": "L",
+          "label": "Large",
+          "usageLimit": 10,
+          "paymentLink": "https://buy.stripe.com/test_00w28k6iScQqbEl11afEk03"
+        },
+        {
+          "value": "XL",
+          "label": "Extra Large",
+          "usageLimit": 6,
+          "paymentLink": "https://buy.stripe.com/test_5kQ00c4aK2bM4bTdNWfEk02"
+        }
+      ]
+    },
+    {
+      "id": "tie-dye-tote-bag",
+      "name": "Tie Dye Tote Bag",
+      "category": "Bag",
+      "priceCents": 2000,
+      "shortName": "TOTE",
+      "description": "A hand-dyed tote for groceries, beach trips, school, and everyday errands.",
+      "colors": ["One of a kind"],
+      "variants": [
+        {
+          "value": "One size",
+          "label": "One size",
+          "usageLimit": 4,
+          "paymentLink": "https://buy.stripe.com/test_8x2bIUcHg3fQaAh39ifEk06"
+        }
+      ]
+    },
+    {
+      "id": "tie-dye-drawstring-bag",
+      "name": "Tie Dye Drawstring Bag",
+      "category": "Bag",
+      "priceCents": 1800,
+      "shortName": "DRAW",
+      "description": "A lightweight, hand-dyed drawstring bag for the gym, school, or day trips.",
+      "colors": ["One of a kind"],
+      "variants": [
+        {
+          "value": "One size",
+          "label": "One size",
+          "usageLimit": 4,
+          "paymentLink": "https://buy.stripe.com/test_6oU9AM0YyeYycIp39ifEk07"
+        }
+      ]
+    },
+    {
+      "id": "tie-dye-makeup-bag",
+      "name": "Tie Dye Makeup Bag",
+      "category": "Bag",
+      "priceCents": 1500,
+      "shortName": "POUCH",
+      "description": "A one-of-a-kind travel pouch that keeps cosmetics organized on the go.",
+      "colors": ["One of a kind"],
+      "variants": [
+        {
+          "value": "One size",
+          "label": "One size",
+          "usageLimit": 4,
+          "paymentLink": "https://buy.stripe.com/test_00wbIU7mW5nYcIpfW4fEk08"
+        }
+      ]
+    }
+  ]
+}

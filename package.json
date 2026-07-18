@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "check": "node --check script.js && node --check server.js && node --check backend/database.js"
+    "check": "node --check script.js && node --check server.js && node --check backend/database.js && node --test",
+    "stripe:limits": "node scripts/configure-stripe-limits.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

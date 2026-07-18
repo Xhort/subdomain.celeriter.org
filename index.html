@@ -20,7 +20,7 @@
         imagesizes="(max-width: 860px) 320px, 430px"
         fetchpriority="high"
     >
-    <link rel="stylesheet" href="./styles.css?v=20260701-9">
+    <link rel="stylesheet" href="./styles.css?v=20260718-1">
 </head>
 <body>
     <!-- Keyboard users can bypass the repeated navigation and jump to the shop. -->
@@ -92,7 +92,9 @@
                 <p>Choose a product or shirt size, then open its secure Stripe checkout. Each product is purchased as a separate order.</p>
             </div>
 
-            <div class="product-grid" id="productGrid"></div>
+            <div class="product-grid" id="productGrid" aria-busy="true">
+                <p class="shop-loading" role="status">Loading the drop…</p>
+            </div>
             <noscript><p class="noscript-message">Please enable JavaScript to choose product options and open Stripe checkout.</p></noscript>
         </section>
 
@@ -111,7 +113,7 @@
                 <article>
                     <span>2</span>
                     <h3>Open secure checkout</h3>
-                    <p>Use the Buy now button to open that product’s Payment Link.</p>
+                    <p>Use the Buy now button to open that product’s limited Payment Link.</p>
                 </article>
                 <article>
                     <span>3</span>
@@ -149,6 +151,6 @@
         </nav>
     </footer>
 
-    <script src="./script.js?v=20260701-9"></script>
+    <script src="./script.js?v=20260718-1"></script>
 </body>
 </html>
