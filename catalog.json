@@ -9,7 +9,7 @@
       "priceCents": 1200,
       "shortName": "TEE",
       "description": "A handmade cotton tie-dye tee. Every pattern is one of a kind.",
-      "colors": ["Red", "Blue", "Green", "Orange", "Yellow"],
+      "colors": ["One of a kind"],
       "variants": [
         {
           "value": "S",
