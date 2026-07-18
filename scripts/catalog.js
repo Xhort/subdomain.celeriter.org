@@ -60,6 +60,7 @@ function getPaymentLinkLimits(catalog) {
             limits.push({
                 label: `${product.name} — ${variant.label}`,
                 url,
+                mode: new URL(url).pathname.startsWith("/test_") ? "test" : "live",
                 limit: variant.usageLimit
             });
         }

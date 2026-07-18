@@ -8,8 +8,9 @@ const { getPaymentLinkLimits, normalizePaymentLink } = require("./catalog");
 
 const inactiveMessage = "This item has reached its drop limit. Please return to Drip Dye for another option.";
 
-async function syncPaymentLinkLimits(stripe, { log = console.log } = {}) {
-    const desiredLinks = getPaymentLinkLimits(catalog);
+async function syncPaymentLinkLimits(stripe, { log = console.log, mode } = {}) {
+    const desiredLinks = getPaymentLinkLimits(catalog)
+        .filter((paymentLink) => !mode || paymentLink.mode === mode);
     const stripeLinksByUrl = new Map();
 
     for await (const paymentLink of stripe.paymentLinks.list({ limit: 100 })) {
@@ -54,8 +55,14 @@ async function main() {
         throw new Error("Set STRIPE_SECRET_KEY in .env before configuring Payment Link limits.");
     }
 
-    const result = await syncPaymentLinkLimits(new Stripe(secretKey));
-    console.log(`Stripe limits are synchronized (${result.updated} updated, ${result.total} checked).`);
+    const mode = secretKey.startsWith("sk_live_") ? "live"
+        : secretKey.startsWith("sk_test_") ? "test" : null;
+    if (!mode) {
+        throw new Error("STRIPE_SECRET_KEY must be a Stripe test or live secret key.");
+    }
+
+    const result = await syncPaymentLinkLimits(new Stripe(secretKey), { mode });
+    console.log(`Stripe ${mode}-mode limits are synchronized (${result.updated} updated, ${result.total} checked).`);
 }
 
 if (require.main === module) {

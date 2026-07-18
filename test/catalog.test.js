@@ -13,6 +13,7 @@ test("catalog contains one unique Payment Link and positive limit per variant", 
     assert.equal(limits.length, variantCount);
     assert.equal(new Set(limits.map(({ url }) => url)).size, limits.length);
     assert.ok(limits.every(({ limit }) => Number.isInteger(limit) && limit > 0));
+    assert.deepEqual(new Set(limits.map(({ mode }) => mode)), new Set(["live"]));
 });
 
 test("backend inventory is derived from the shared catalog limits", () => {

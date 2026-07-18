@@ -39,3 +39,25 @@ test("Stripe synchronization updates only mismatched limits", async () => {
         limit: desired[1].limit
     });
 });
+
+test("Stripe synchronization can target only live-mode links", async () => {
+    const desired = getPaymentLinkLimits(catalog).filter(({ mode }) => mode === "live");
+    const updates = [];
+    const stripe = {
+        paymentLinks: {
+            list: () => asyncList(desired.map((entry, index) => ({
+                id: `plink_live_${index}`,
+                url: entry.url,
+                inactive_message: null,
+                restrictions: { completed_sessions: { limit: null } }
+            }))),
+            update: async (id, payload) => updates.push({ id, payload })
+        }
+    };
+
+    const result = await syncPaymentLinkLimits(stripe, { log: () => {}, mode: "live" });
+
+    assert.equal(result.total, desired.length);
+    assert.equal(result.updated, desired.length);
+    assert.equal(updates.length, desired.length);
+});

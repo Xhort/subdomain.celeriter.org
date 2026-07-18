@@ -23,7 +23,7 @@ cp .env.example .env
 pnpm stripe:limits
 ```
 
-The current catalog contains test-mode Payment Links, so use a test-mode `sk_test_…` key. When moving to production, replace every test URL with its live Payment Link, use the corresponding live key, and run the command again. Never commit `.env` or a secret key.
+The command detects whether `STRIPE_SECRET_KEY` is a test or live key and synchronizes only matching links. The current catalog contains live links, so applying its limits requires the corresponding live secret key. Never commit `.env` or a secret key.
 
 The synchronization command is safe to rerun. It updates mismatched links, leaves correct links unchanged, and stops before making updates if any catalog link is missing from the selected Stripe account. When a link reaches its completed-session limit, Stripe closes it and displays the configured sold-out message.
 

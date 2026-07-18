@@ -14,26 +14,26 @@
         {
           "value": "S",
           "label": "Small",
-          "usageLimit": 1,
-          "paymentLink": "https://buy.stripe.com/test_cNi4gsgXwbMm37P7pyfEk05"
+          "usageLimit": 3,
+          "paymentLink": "https://buy.stripe.com/4gM6oBcVO5JOfoofMI18c03"
         },
         {
           "value": "M",
           "label": "Medium",
           "usageLimit": 5,
-          "paymentLink": "https://buy.stripe.com/test_eVq9AM4aKcQq7o5fW4fEk04"
+          "paymentLink": "https://buy.stripe.com/bJe14hcVO8W0a44bws18c04"
         },
         {
           "value": "L",
           "label": "Large",
           "usageLimit": 10,
-          "paymentLink": "https://buy.stripe.com/test_00w28k6iScQqbEl11afEk03"
+          "paymentLink": "https://buy.stripe.com/7sYcMZ9JC5JO6RS1VS18c05"
         },
         {
           "value": "XL",
           "label": "Extra Large",
           "usageLimit": 6,
-          "paymentLink": "https://buy.stripe.com/test_5kQ00c4aK2bM4bTdNWfEk02"
+          "paymentLink": "https://buy.stripe.com/3cI3cpf3Wgos5NO2ZW18c06"
         }
       ]
     },
@@ -50,7 +50,7 @@
           "value": "One size",
           "label": "One size",
           "usageLimit": 4,
-          "paymentLink": "https://buy.stripe.com/test_8x2bIUcHg3fQaAh39ifEk06"
+          "paymentLink": "https://buy.stripe.com/fZuaERaNGgos90058418c09"
         }
       ]
     },
@@ -67,7 +67,7 @@
           "value": "One size",
           "label": "One size",
           "usageLimit": 4,
-          "paymentLink": "https://buy.stripe.com/test_6oU9AM0YyeYycIp39ifEk07"
+          "paymentLink": "https://buy.stripe.com/00w6oBg80b486RS7gc18c08"
         }
       ]
     },
@@ -84,7 +84,7 @@
           "value": "One size",
           "label": "One size",
           "usageLimit": 4,
-          "paymentLink": "https://buy.stripe.com/test_00wbIU7mW5nYcIpfW4fEk08"
+          "paymentLink": "https://buy.stripe.com/aFacMZ7Bu6NS1xyfMI18c07"
         }
       ]
     }
